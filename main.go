@@ -8,6 +8,7 @@ import (
 func main() {
 
 	ATS_Logging()
+	Insert_Comment_One()
 
 	e := echo.New()
 	e.Use(middleware.CORS())

@@ -48,6 +48,31 @@ CREATE TABLE estimates(id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, address TEX
 	fmt.Println("table reviews created")
 }
 
+func Insert_Comment_One() {
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	rev1 := `
+INSERT INTO reviews (uuid, name, email, date, time, review) VALUES('001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
+'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled. 
+Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with 
+Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them 
+to anyone looking to get problem trees down safely.');
+`
+	_, err = db.Exec(rev1)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("insert review 001 complete")
+}
+
 func UUID() string {
 	aseed := time.Now()
 	aSeed := aseed.UnixNano()
