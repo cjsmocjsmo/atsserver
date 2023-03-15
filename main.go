@@ -9,7 +9,7 @@ func main() {
 
 	// ATS_Logging()
 	Create_Tables()
-	Insert_Comment()
+	Insert_Comment_One()
 
 	e := echo.New()
 	e.Use(middleware.CORS())

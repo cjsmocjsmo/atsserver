@@ -49,7 +49,7 @@ CREATE TABLE estimates(id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, address TEX
 	fmt.Println("table reviews created")
 }
 
-func Insert_Comment() {
+func Insert_Comment_One() {
 	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
 	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
@@ -66,14 +66,26 @@ Very knowledgeable and professional. Mike did a great job in the tree and zip li
 Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them 
 to anyone looking to get problem trees down safely.', '5');
 `
-	_, err = db.Exec(rev1)
+	res, err := db.Exec(rev1)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("insert review 001 complete")
+	fmt.Println(res)
 
+	fmt.Println("insert review 001 complete")
+}
+
+func Insert_comment_two() {
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
 	rev2 := `
 INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '002', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15',
 'I contacted Curtis about removing several, dangerous trees on my property.  He 
@@ -87,6 +99,17 @@ work. I will continue to call Curtis when I need a tree removed. I would highly 
 	}
 
 	fmt.Println("insert review 002 complete")
+}
+
+func Insert_comment_three() {
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
 
 	rev3 := `
 INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '003', 'Kurt R', 'KurtR@gmail.com', '2023-03-15',
