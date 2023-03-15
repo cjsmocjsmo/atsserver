@@ -11,7 +11,7 @@ COPY go.sum .
 
 RUN export GOPATH=/go/src/atserver
 RUN go get -v /go/src/atserver
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main /go/src/atserver
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main /go/src/atserver
 
 FROM debian:bullseye-slim
 # FROM ubuntu:22.04
