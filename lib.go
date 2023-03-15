@@ -60,7 +60,7 @@ func Insert_Comment() {
 	defer db.Close()
 
 	rev1 := `
-INSERT INTO reviews (uuid, name, email, date, time, review rating) VALUES('001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
+INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES('001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
 'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled. 
 Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with 
 Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them 
