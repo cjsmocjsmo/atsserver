@@ -179,12 +179,14 @@ func InsertReviewHandler(c echo.Context) error {
 }
 
 type RevewInfo struct {
+	id     string
 	uuid   string
 	name   string
 	email  string
 	date   string
 	time   string
 	review string
+	rating string
 }
 
 func GetAllReviewsHandler(c echo.Context) error {
@@ -206,24 +208,28 @@ func GetAllReviewsHandler(c echo.Context) error {
 
 	for rows.Next() {
 		var rev RevewInfo
+		var id string
 		var uuid string
 		var name string
 		var email string
 		var date string
 		var time string
 		var review string
+		var rating string
 
-		err = rows.Scan(&uuid, &name, &email, &date, &time, &review)
+		err = rows.Scan(&id, &uuid, &name, &email, &date, &time, &review, &rating)
 		if err != nil {
 			log.Println(err)
 		}
 
+		rev.id = id
 		rev.uuid = uuid
 		rev.name = name
 		rev.email = email
 		rev.date = date
 		rev.time = time
 		rev.review = review
+		rev.rating = rating
 		reviews = append(reviews, rev)
 
 	}
