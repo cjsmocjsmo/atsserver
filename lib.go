@@ -60,7 +60,7 @@ func Insert_Comment_One() {
 	defer db.Close()
 
 	rev1 := `
-INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
+INSERT INTO reviews (id, uuid, name, email, date, time, review, rating) VALUES('1', '001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
 'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled. 
 Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with 
 Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them 
@@ -87,7 +87,7 @@ func Insert_comment_two() {
 
 	defer db.Close()
 	rev2 := `
-INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '002', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15',
+INSERT INTO reviews (id, uuid, name, email, date, time, review, rating) VALUES('2', '002', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15',
 'I contacted Curtis about removing several, dangerous trees on my property.  He 
 showed up on time and ready to work. He did exactly what I expected him to do. He does exceptional 
 work. I will continue to call Curtis when I need a tree removed. I would highly recommend AlphaTree.', '5');
@@ -112,7 +112,7 @@ func Insert_comment_three() {
 	defer db.Close()
 
 	rev3 := `
-INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '003', 'Kurt R', 'KurtR@gmail.com', '2023-03-15',
+INSERT INTO reviews (id, uuid, name, email, date, time, review, rating) VALUES('3', '003', 'Kurt R', 'KurtR@gmail.com', '2023-03-15',
 'Curtis and crew took down an 80 foot fir near a fence and house. NO DAMAGE!!!  
 Cleanup was thorough and they cut the rounds into 14 inch rounds for later splitting. Crew had a 
 great attitude. Will use them again.', '5');
@@ -148,8 +148,9 @@ func InsertReviewHandler(c echo.Context) error {
 	}
 
 	defer db.Close()
-
-	nuuid := UUID()
+	uid := UUID()
+	nid := uid
+	nuuid := uid
 	nname := c.QueryParam("name")
 	nemail := c.QueryParam("email")
 	ndate := c.QueryParam("date")
@@ -157,7 +158,7 @@ func InsertReviewHandler(c echo.Context) error {
 	nreview := c.QueryParam("review")
 	nrating := c.QueryParam("rating")
 
-	res, err := db.Exec("INSERT INTO reviews VALUES(NULL,?,?,?,?,?,?,?)", nuuid, nname, nemail, ndate, ntime, nreview, nrating)
+	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?,?)", nid, nuuid, nname, nemail, ndate, ntime, nreview, nrating)
 	if err != nil {
 		log.Println(err)
 		log.Println("review insert has failed")
