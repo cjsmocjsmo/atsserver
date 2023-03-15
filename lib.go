@@ -60,7 +60,7 @@ func Insert_Comment() {
 	defer db.Close()
 
 	rev1 := `
-INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES('001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
+INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '001', 'Scott Mason', 'smason@gmail.com', '2023-03-15',
 'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled. 
 Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with 
 Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them 
@@ -75,7 +75,7 @@ to anyone looking to get problem trees down safely.', '5');
 	fmt.Println("insert review 001 complete")
 
 	rev2 := `
-INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES('002', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15',
+INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '002', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15',
 'I contacted Curtis about removing several, dangerous trees on my property.  He 
 showed up on time and ready to work. He did exactly what I expected him to do. He does exceptional 
 work. I will continue to call Curtis when I need a tree removed. I would highly recommend AlphaTree.', '5');
@@ -89,7 +89,7 @@ work. I will continue to call Curtis when I need a tree removed. I would highly 
 	fmt.Println("insert review 002 complete")
 
 	rev3 := `
-INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES('003', 'Kurt R', 'KurtR@gmail.com', '2023-03-15',
+INSERT INTO reviews (uuid, name, email, date, time, review, rating) VALUES(NULL, '003', 'Kurt R', 'KurtR@gmail.com', '2023-03-15',
 'Curtis and crew took down an 80 foot fir near a fence and house. NO DAMAGE!!!  
 Cleanup was thorough and they cut the rounds into 14 inch rounds for later splitting. Crew had a 
 great attitude. Will use them again.', '5');
