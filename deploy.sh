@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="atsserver:0.0.2";
+VERSION="atsserver:0.0.3";
 
 git pull && \
 docker build -t $VERSION . && \
