@@ -179,7 +179,7 @@ func InsertReviewHandler(c echo.Context) error {
 }
 
 type RevewInfo struct {
-	id     string
+	id     int
 	uuid   string
 	name   string
 	email  string
@@ -208,7 +208,7 @@ func GetAllReviewsHandler(c echo.Context) error {
 
 	for rows.Next() {
 		var rev RevewInfo
-		var id string
+		var id int
 		var uuid string
 		var name string
 		var email string
