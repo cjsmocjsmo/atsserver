@@ -19,10 +19,11 @@ FROM debian:bullseye-slim
 RUN \
     apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get -y install sqlite3 && \
+    apt-get -y install sqlite3 sqlite-utils && \
     apt-get -y autoclean && \
     apt-get -y autoremove && \
     mkdir /usr/share/ats_server && \
+    mkdir /usr/share/ats_server/static && \
     chmod -R +rwx /usr/share/ats_server
 
 WORKDIR /usr/share/ats_server

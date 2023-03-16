@@ -7,15 +7,16 @@ import (
 
 func main() {
 
-	// ATS_Logging()
+	ATS_Logging()
 	Create_Tables()
-	Insert_Comment_One()
+	Insert_Initial_Comments()
 
 	e := echo.New()
 	e.Use(middleware.CORS())
 	e.GET("/test", TestHandler)
 	e.GET("/ins_rev", InsertReviewHandler)
 	e.GET("/all_revs", GetAllReviewsHandler)
+	e.GET("/backup", DumpGzipHandler)
 
 	// e.Static("/static", "static")      //for pics
 	// e.Static("/music", "fsData/music") //for music
