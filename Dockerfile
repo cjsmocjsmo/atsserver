@@ -1,4 +1,4 @@
-FROM golang:bookworm AS builder
+FROM golang:buster AS builder
 
 RUN mkdir /go/src/atserver
 WORKDIR /go/src/atserver
