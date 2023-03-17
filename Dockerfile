@@ -23,15 +23,24 @@ RUN \
     apt-get -y dist-upgrade && \
     apt-get -y install sqlite3 sqlite-utils && \
     apt-get -y autoclean && \
-    apt-get -y autoremove && \
+    apt-get -y autoremove
+RUN \
     mkdir /usr/share/ats_server && \
-    chmod -R +rwx /usr/share/ats_server && \
+    chmod -R +rwx /usr/share/ats_server
+
+RUN \
     mkdir /usr/share/ats_server/static && \
-    chmod -R +rwx /usr/share/ats_server/static && \
+    chmod -R +rwx /usr/share/ats_server/static
+
+RUN \
     touch /usr/share/ats_server/ATS.log && \
-    chmod -R +rwx /usr/share/ats_server/ATS.log && \
+    chmod -R +rwx /usr/share/ats_server/ATS.log 
+
+RUN \
     touch /usr/share/ats_server/static/rev_db.tag.gz && \
-    chmod -R +rwx /usr/share/ats_server/rev_db.tag.gz && \
+    chmod -R +rwx /usr/share/ats_server/rev_db.tag.gz 
+
+RUN \
     touch /usr/share/ats_server/static/est_db.tag.gz && \
     chmod -R +rwx /usr/share/ats_server/est_db.tag.gz
 
