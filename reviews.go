@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -142,8 +143,8 @@ func TestHandler(c echo.Context) error {
 }
 
 func InsertReviewHandler(c echo.Context) error {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -152,12 +153,29 @@ func InsertReviewHandler(c echo.Context) error {
 	uid := UUID()
 	nid := uid
 	nuuid := uid
-	nname := c.QueryParam("name")
-	nemail := c.QueryParam("email")
-	ndate := c.QueryParam("date")
-	ntime := c.QueryParam("time")
-	nreview := c.QueryParam("review")
-	nrating := c.QueryParam("rating")
+
+	// MUST BE IN THE FORMAT
+	// entry=JoSPACEBlowSPLITcjsmoATgmailDOTcomSPLIT2024-03-03SPLIT11PMSPLITjobSPACEwellSPACEdoneSPLIT5
+	rawstr := c.QueryString()
+	parts := strings.Split(rawstr, "SPLIT")
+
+	nname := strings.ReplaceAll(parts[0], "SPACE", " ") // replace SPACE
+
+	// rawemail := parts[1] // replace AT and DOT
+	rawemail := strings.Replace(parts[1], "AT", "@", 1)
+	nemail := strings.Replace(rawemail, "DOT", ".", 1)
+
+	ndate := parts[2]
+	ntime := parts[3]
+	nreview := strings.ReplaceAll(parts[4], "SPACE", " ") //replace SPACE
+	nrating := parts[5]
+
+	log.Println(nname)
+	log.Println(nemail)
+	log.Println(ndate)
+	log.Println(ntime)
+	log.Println(nreview)
+	log.Println(nrating)
 
 	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?,?)", nid, nuuid, nname, nemail, ndate, ntime, nreview, nrating)
 	if err != nil {

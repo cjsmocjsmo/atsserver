@@ -16,9 +16,11 @@ func main() {
 	e.GET("/test", TestHandler)
 	e.GET("/ins_rev", InsertReviewHandler)
 	e.GET("/all_revs", GetAllReviewsHandler)
-	e.GET("/backup", DumpGzipHandler)
 
-	// e.Static("/static", "static")      //for pics
-	// e.Static("/music", "fsData/music") //for music
+	e.GET("/ins_est", InsertEstimateHandler)
+	e.GET("/all_est", GetAllEstimatesHandler)
+
+	e.GET("/backup", DumpGzipHandler)
+	e.Static("/static", "static") //for backup.tar.gz
 	e.Logger.Fatal(e.Start(":8080"))
 }
