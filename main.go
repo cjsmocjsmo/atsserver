@@ -23,7 +23,7 @@ func main() {
 	e.GET("/ins_est", InsertEstimateHandler)
 	e.GET("/all_est", GetAllEstimatesHandler)
 
-	e.GET("/backup", DumpGzipHandler)
+	e.GET("/backup", ReviewsGzipHandler)
 	e.Static("/static", "./static") // testing
 	// e.Static("/static", "/usr/share/ats_server/static") // production for backup.tar.gz
 	e.Logger.Fatal(e.Start(":8080"))

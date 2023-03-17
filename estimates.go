@@ -1,17 +1,16 @@
 package main
 
 import (
-	//	"compress/gzip"
+	"compress/gzip"
 	"database/sql"
-	"strings"
-	// "encoding/json"
+	"encoding/json"
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-
+	"strings"
 	// "math/rand"
 	"net/http"
-	// "os"
+	"os"
 	"strconv"
 	// "time"
 )
@@ -180,6 +179,8 @@ func GetAllEstimatesHandler(c echo.Context) error {
 }
 
 func CompletEstimate(c echo.Context) error {
+	to_be_del := c.QueryParam("estvid")
+
 	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
 	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
@@ -187,11 +188,100 @@ func CompletEstimate(c echo.Context) error {
 	}
 
 	defer db.Close()
+	del1, err2 := db.Exec("DELETE FROM est_working WHERE id=?)", &to_be_del)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("est_working deletion has failed")
+	}
+	var ret_val int
+	_, err = del1.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val = 1
+	} else {
+		ret_val = 0
+	}
 	//delete from working add to completed
-	return c.JSON(http.StatusOK, "Backup Created")
+	res2, err2 := db.Exec("INSERT INTO est_completed VALUES(?,?)", to_be_del, to_be_del)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("est_completed insert has failed")
+	}
+
+	var ret_val2 int
+	_, err = res2.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val = 1
+	} else {
+		ret_val = 0
+	}
+
+	result := []int{ret_val, ret_val2}
+
+	return c.JSON(http.StatusOK, result)
 }
 
-func GzipEstimatesHandler(c echo.Context) error {
+func EstimatesGzipHandler(c echo.Context) error {
+	log.Println("starting GetAllReviewsHandler")
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM estimates")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	estimates := []map[string]string{}
+
+	for rows.Next() {
+		est := map[string]string{}
+		var id string
+
+		var name string
+		var email string
+		var date string
+		var time string
+		var address string
+		var city string
+		var comment string
+
+		err = rows.Scan(&id, &name, &email, &date, &time, &address, &city, &comment)
+		if err != nil {
+			log.Println(err)
+		}
+
+		est["id"] = id
+		est["name"] = name
+		est["email"] = email
+		est["date"] = date
+		est["time"] = time
+		est["address"] = address
+		est["city"] = city
+		est["comment"] = comment
+		estimates = append(estimates, est)
+
+	}
+
+	//convert to json
+	jsonstr, err := json.Marshal(estimates)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//gzip file and move it to static http folder
+
+	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
+	f, _ := os.Create("static/est_db.tag.gz") //test
+	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
+	w.Write([]byte(jsonstr))
+	w.Close()
 
 	return c.JSON(http.StatusOK, "Backup Created")
 }

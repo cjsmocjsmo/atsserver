@@ -250,7 +250,7 @@ func get_accepted_reviews() []map[string]string {
 }
 
 func GetAllReviewsHandler(c echo.Context) error {
-
+	log.Println("GetAllReviews has started")
 	all_reviews := [][]map[string]string{}
 
 	allrevs := get_accepted_reviews()
@@ -300,11 +300,12 @@ func GetAllReviewsHandler(c echo.Context) error {
 
 		}
 		all_reviews = append(all_reviews, revieww)
+		log.Println("GetAllReviews is complete")
 	}
 	return c.JSON(http.StatusOK, all_reviews)
 }
 
-func DumpGzipHandler(c echo.Context) error {
+func ReviewsGzipHandler(c echo.Context) error {
 	log.Println("starting GetAllReviewsHandler")
 	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
 	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
@@ -320,7 +321,7 @@ func DumpGzipHandler(c echo.Context) error {
 	}
 	defer rows.Close()
 
-	var reviews []map[string]string
+	reviews := []map[string]string{}
 
 	for rows.Next() {
 		rev := map[string]string{}
@@ -358,10 +359,11 @@ func DumpGzipHandler(c echo.Context) error {
 	//gzip file and move it to static http folder
 
 	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
-	f, _ := os.Create("static/dbbackup.tag.gz") //test
+	f, _ := os.Create("static/rev_db.tag.gz") //test
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
 	w.Write([]byte(jsonstr))
 	w.Close()
+	log.Println("rev_db.tag.gz has been created")
 
 	return c.JSON(http.StatusOK, "Backup Created")
 
@@ -424,7 +426,7 @@ func RejectReviewHandler(c echo.Context) error {
 
 	to_add_id := c.QueryParam("revid")
 
-	del1, err2 := db.Exec("DELETE FROM revs_jailed VALUES(?)", &to_add_id)
+	del1, err2 := db.Exec("DELETE FROM revs_jailed WHERE id=?)", &to_add_id)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("revs_jailed deletion has failed")
