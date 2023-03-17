@@ -23,16 +23,25 @@ RUN \
     apt-get -y dist-upgrade && \
     apt-get -y install sqlite3 sqlite-utils && \
     apt-get -y autoclean && \
-    apt-get -y autoremove && \
-    mkdir /usr/share/ats_server && \
-    mkdir /usr/share/ats_server/static && \
-    chmod -R +rwx /usr/share/ats_server
+    apt-get -y autoremove
+
 
 WORKDIR /usr/share/ats_server
 
 COPY --from=builder /go/src/atserver/main .
 
-ENV ATS_LOG_PATH=/usr/share/ats_server
+RUN \
+    mkdir /usr/share/ats_server && \
+    mkdir /usr/share/ats_server/static && \
+    chmod -R +rwx /usr/share/ats_server && \
+    touch /usr/share/ats_server/ATS.log && \
+    chmod -R +rwx /usr/share/ats_server/ATS.log && \
+    touch /usr/share/ats_server/static/rev_db.tag.gz && \
+    chmod -R +rwx /usr/share/ats_server/rev_db.tag.gz && \
+    touch /usr/share/ats_server/static/est_db.tag.gz && \
+    chmod -R +rwx /usr/share/ats_server/est_db.tag.gz
+
+ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
 
 STOPSIGNAL SIGINT
 CMD ["/usr/share/ats_server/main"]

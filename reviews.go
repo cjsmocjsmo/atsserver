@@ -16,7 +16,7 @@ import (
 )
 
 func ATS_Logging() {
-	// logfile := os.Getenv("ATS_LOG_PATH") + "/ATS.log"
+	// logfile := os.Getenv("ATS_LOG_PATH")
 	logfile := "/media/charliepi/HD/ats/atsserver/ATS.log"
 	file, err := os.OpenFile(logfile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
