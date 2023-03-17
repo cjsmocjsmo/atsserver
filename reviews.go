@@ -159,9 +159,9 @@ func InsertReviewHandler(c echo.Context) error {
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "SPLIT")
 
-	nname := strings.ReplaceAll(parts[0], "SPACE", " ") // replace SPACE
+	rawname := strings.Split(parts[0], "=")
+	nname := strings.ReplaceAll(rawname[1], "SPACE", " ") // replace SPACE
 
-	// rawemail := parts[1] // replace AT and DOT
 	rawemail := strings.Replace(parts[1], "AT", "@", 1)
 	nemail := strings.Replace(rawemail, "DOT", ".", 1)
 
