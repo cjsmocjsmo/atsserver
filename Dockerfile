@@ -4,7 +4,9 @@ RUN mkdir /go/src/atserver
 WORKDIR /go/src/atserver
 
 COPY main.go .
-COPY lib.go .
+COPY reviews.go .
+COPY estimates.go .
+COPY admin.go .
 
 COPY go.mod .
 COPY go.sum .

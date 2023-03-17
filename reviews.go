@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "bufio"
 	"compress/gzip"
 	"database/sql"
 	"encoding/json"

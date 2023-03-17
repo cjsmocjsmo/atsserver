@@ -7,12 +7,10 @@ import (
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-	"strings"
-	// "math/rand"
 	"net/http"
 	"os"
 	"strconv"
-	// "time"
+	"strings"
 )
 
 func Create_Estimate_Tables() {
@@ -178,7 +176,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, est_map)
 }
 
-func CompletEstimate(c echo.Context) error {
+func CompletEstimateHandler(c echo.Context) error {
 	to_be_del := c.QueryParam("estvid")
 
 	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
