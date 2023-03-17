@@ -1,4 +1,4 @@
-FROM golang:bullseye AS builder
+FROM golang:bookworm AS builder
 
 RUN mkdir /go/src/atserver
 WORKDIR /go/src/atserver
@@ -15,7 +15,7 @@ RUN export GOPATH=/go/src/atserver
 RUN go get -v /go/src/atserver
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main /go/src/atserver
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 # FROM ubuntu:22.04
 
 RUN \
