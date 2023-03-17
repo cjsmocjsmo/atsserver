@@ -8,7 +8,8 @@ import (
 func main() {
 
 	ATS_Logging()
-	Create_Tables()
+	Create_Reviews_Tables()
+	Create_Estimate_Tables()
 	Insert_Initial_Comments()
 
 	e := echo.New()
@@ -16,11 +17,14 @@ func main() {
 	e.GET("/test", TestHandler)
 	e.GET("/ins_rev", InsertReviewHandler)
 	e.GET("/all_revs", GetAllReviewsHandler)
+	e.GET("/rev_accept", AcceptReviewHandler)
+	e.GET("/rev_reject", RejectReviewHandler)
 
 	e.GET("/ins_est", InsertEstimateHandler)
 	e.GET("/all_est", GetAllEstimatesHandler)
 
 	e.GET("/backup", DumpGzipHandler)
-	e.Static("/static", "static") //for backup.tar.gz
+	e.Static("/static", "./static") // testing
+	// e.Static("/static", "/usr/share/ats_server/static") // production for backup.tar.gz
 	e.Logger.Fatal(e.Start(":8080"))
 }

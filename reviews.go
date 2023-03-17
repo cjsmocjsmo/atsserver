@@ -19,7 +19,6 @@ import (
 func ATS_Logging() {
 	// logfile := os.Getenv("ATS_LOG_PATH") + "/ATS.log"
 	logfile := "/media/charliepi/HD/ats/atsserver/ATS.log"
-	// If the file doesn't exist, create it or append to the file
 	file, err := os.OpenFile(logfile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -28,7 +27,7 @@ func ATS_Logging() {
 	log.Println("ATS logging started")
 }
 
-func Create_Tables() {
+func Create_Reviews_Tables() {
 	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
 	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
@@ -40,9 +39,13 @@ func Create_Tables() {
 
 	sts := `
 DROP TABLE IF EXISTS reviews;
-CREATE TABLE reviews(id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, email TEXT, date TEXT, time TEXT, review TEXT, rating TEXT);
-DROP TABLE IF EXISTS estimates;
-CREATE TABLE estimates(id INTEGER PRIMARY KEY, uuid TEXT, name TEXT, address TEXT, city TEXT, telephone TEXT, email TEXT, reqservdate TEXT, comment TEXT, photo TEXT);
+CREATE TABLE reviews(id INTEGER PRIMARY KEY, name TEXT, email TEXT, date TEXT, time TEXT, review TEXT, rating TEXT);
+DROP TABLE IF EXISTS revs_accepted;
+CREATE TABLE revs_accepted(id INTEGER PRIMARY KEY, revid TEXT);
+DROP TABLE IF EXISTS revs_rejected;
+CREATE TABLE revs_rejected(id INTEGER PRIMARY KEY, revid TEXT);
+DROP TABLE IF EXISTS revs_jailed;
+CREATE TABLE revs_jailed(id INTEGER PRIMARY KEY, revid TEXT);
 `
 	_, err = db.Exec(sts)
 
@@ -64,8 +67,9 @@ func Insert_Comment_One() {
 	defer db.Close()
 
 	rev1 := `
-INSERT INTO reviews (id, uuid, name, email, date, time, review, rating) VALUES('1', '001', 'Scott Mason', 'smason@gmail.com', '2023-03-15', '04PM',
+INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('1', 'Scott Mason', 'smason@gmail.com', '2023-03-15', '04PM',
 'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled.  Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them to anyone looking to get problem trees down safely.', '5');
+INSERT INTO revs_accepted(id, revid) VALUES('1', '1');
 `
 	_, err = db.Exec(rev1)
 
@@ -86,8 +90,9 @@ func Insert_comment_two() {
 
 	defer db.Close()
 	rev2 := `
-INSERT INTO reviews (id, uuid, name, email, date, time, review, rating) VALUES('2', '002', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15', '11am',
+INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('2', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15', '11am',
 'I contacted Curtis about removing several, dangerous trees on my property.  He showed up on time and ready to work. He did exactly what I expected him to do. He does exceptional work. I will continue to call Curtis when I need a tree removed. I would highly recommend AlphaTree.', '5');
+INSERT INTO revs_accepted(id, revid) VALUES('2', '2');
 `
 	_, err = db.Exec(rev2)
 
@@ -109,8 +114,9 @@ func Insert_comment_three() {
 	defer db.Close()
 
 	rev3 := `
-INSERT INTO reviews (id, uuid, name, email, date, time, review, rating) VALUES('3', '003', 'Kurt R', 'KurtR@gmail.com', '2023-03-15', '01PM',
+INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('3', 'Kurt R', 'KurtR@gmail.com', '2023-03-15', '01PM',
 'Curtis and crew took down an 80 foot fir near a fence and house. NO DAMAGE!!! Cleanup was thorough and they cut the rounds into 14 inch rounds for later splitting. Crew had a great attitude. Will use them again.', '5');
+INSERT INTO revs_accepted(id, revid) VALUES('3', '3');
 `
 	_, err = db.Exec(rev3)
 
@@ -150,9 +156,7 @@ func InsertReviewHandler(c echo.Context) error {
 	}
 
 	defer db.Close()
-	uid := UUID()
-	nid := uid
-	nuuid := uid
+	nid := UUID()
 
 	// MUST BE IN THE FORMAT
 	// entry=JoSPACEBlowSPLITcjsmoATgmailDOTcomSPLIT2024-03-03SPLIT11PMSPLITjobSPACEwellSPACEdoneSPLIT5
@@ -177,28 +181,40 @@ func InsertReviewHandler(c echo.Context) error {
 	log.Println(nreview)
 	log.Println(nrating)
 
-	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?,?)", nid, nuuid, nname, nemail, ndate, ntime, nreview, nrating)
+	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?)", nid, nname, nemail, ndate, ntime, nreview, nrating)
 	if err != nil {
 		log.Println(err)
 		log.Println("review insert has failed")
 	}
-
-	var id int64
-	var ret_val int64
-	id, err = res.LastInsertId()
+	var ret_val int
+	_, err = res.LastInsertId()
 	if err != nil {
 		log.Println(err)
-		ret_val = 0
+		ret_val = 1
 	} else {
-		ret_val = id
+		ret_val = 0
 	}
 
-	result := strconv.Itoa(int(ret_val))
+	res2, err2 := db.Exec("INSERT INTO revs_jailed VALUES(?)", nid)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("revs_jailed insert has failed")
+	}
+	var ret_val2 int
+	_, err = res2.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val2 = 1
+	} else {
+		ret_val2 = 0
+	}
+
+	result := []string{strconv.Itoa(ret_val), strconv.Itoa(ret_val2)}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-func GetAllReviewsHandler(c echo.Context) error {
+func get_accepted_reviews() []map[string]string {
 	log.Println("starting GetAllReviewsHandler")
 	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
 	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
@@ -208,42 +224,84 @@ func GetAllReviewsHandler(c echo.Context) error {
 
 	defer db.Close()
 
-	rows, err := db.Query("SELECT * FROM reviews")
+	rows, err := db.Query("SELECT * FROM revs_accepted")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
-	var reviews []map[string]string
+	var accepted []map[string]string
 
 	for rows.Next() {
-		rev := map[string]string{}
+		revv := map[string]string{}
 		var id string
-		var uuid string
-		var name string
-		var email string
-		var date string
-		var time string
-		var review string
-		var rating string
+		var revid string
 
-		err = rows.Scan(&id, &uuid, &name, &email, &date, &time, &review, &rating)
+		err = rows.Scan(&id, &revid)
 		if err != nil {
 			log.Println(err)
 		}
 
-		rev["id"] = id
-		rev["uuid"] = uuid
-		rev["name"] = name
-		rev["email"] = email
-		rev["date"] = date
-		rev["time"] = time
-		rev["review"] = review
-		rev["rating"] = rating
-		reviews = append(reviews, rev)
-
+		revv["id"] = id
+		revv["revid"] = revid
+		accepted = append(accepted, revv)
 	}
-	return c.JSON(http.StatusOK, reviews)
+	return accepted
+}
+
+func GetAllReviewsHandler(c echo.Context) error {
+
+	all_reviews := [][]map[string]string{}
+
+	allrevs := get_accepted_reviews()
+	for _, arev := range allrevs {
+		log.Println(arev["revid"])
+
+		log.Println("starting GetAllReviewsHandler")
+		// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+		db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+		if err != nil {
+			log.Fatal((err))
+		}
+
+		defer db.Close()
+
+		rows, err := db.Query("SELECT * FROM reviews WHERE id=?", arev["revid"])
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+
+		var revieww []map[string]string
+
+		for rows.Next() {
+			frev := map[string]string{}
+			var id string
+			var name string
+			var email string
+			var date string
+			var time string
+			var review string
+			var rating string
+
+			err = rows.Scan(&id, &name, &email, &date, &time, &review, &rating)
+			if err != nil {
+				log.Println(err)
+			}
+
+			frev["id"] = id
+			frev["name"] = name
+			frev["email"] = email
+			frev["date"] = date
+			frev["time"] = time
+			frev["review"] = review
+			frev["rating"] = rating
+			revieww = append(revieww, frev)
+
+		}
+		all_reviews = append(all_reviews, revieww)
+	}
+	return c.JSON(http.StatusOK, all_reviews)
 }
 
 func DumpGzipHandler(c echo.Context) error {
@@ -267,7 +325,7 @@ func DumpGzipHandler(c echo.Context) error {
 	for rows.Next() {
 		rev := map[string]string{}
 		var id string
-		var uuid string
+
 		var name string
 		var email string
 		var date string
@@ -275,13 +333,12 @@ func DumpGzipHandler(c echo.Context) error {
 		var review string
 		var rating string
 
-		err = rows.Scan(&id, &uuid, &name, &email, &date, &time, &review, &rating)
+		err = rows.Scan(&id, &name, &email, &date, &time, &review, &rating)
 		if err != nil {
 			log.Println(err)
 		}
 
 		rev["id"] = id
-		rev["uuid"] = uuid
 		rev["name"] = name
 		rev["email"] = email
 		rev["date"] = date
@@ -310,12 +367,92 @@ func DumpGzipHandler(c echo.Context) error {
 
 }
 
-// func AcceptReviewHandler(c echo.Context) error {
+func AcceptReviewHandler(c echo.Context) error {
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	if err != nil {
+		log.Fatal((err))
+	}
 
-// 	return c.JSON(http.StatusOK, ActionMedia)
-// }
+	defer db.Close()
+	nid := UUID()
 
-// func RejectReviewHandler(c echo.Context) error {
+	to_add_id := c.QueryParam("revid")
 
-// 	return c.JSON(http.StatusOK, ActionMedia)
-// }
+	del1, err2 := db.Exec("DELETE FROM revs_jailed VALUES(?)", &to_add_id)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("revs_jailed deletion has failed")
+	}
+	var ret_val int
+	_, err = del1.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val = 1
+	} else {
+		ret_val = 0
+	}
+
+	Ins1, err2 := db.Exec("INSERT INTO revs_accepted VALUES(?,?)", &nid, &to_add_id)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("rev_accepted insert has failed")
+	}
+	var ret_val2 int
+	_, err = Ins1.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val2 = 1
+	} else {
+		ret_val2 = 0
+	}
+
+	result := []int{ret_val, ret_val2}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func RejectReviewHandler(c echo.Context) error {
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	defer db.Close()
+	nid := UUID()
+
+	to_add_id := c.QueryParam("revid")
+
+	del1, err2 := db.Exec("DELETE FROM revs_jailed VALUES(?)", &to_add_id)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("revs_jailed deletion has failed")
+	}
+	var ret_val int
+	_, err = del1.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val = 1
+	} else {
+		ret_val = 0
+	}
+
+	Ins1, err2 := db.Exec("INSERT INTO revs_rejected VALUES(?,?)", &nid, &to_add_id)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("revs_rejected insert has failed")
+	}
+	var ret_val2 int
+	_, err = Ins1.LastInsertId()
+	if err != nil {
+		log.Println(err)
+		ret_val2 = 1
+	} else {
+		ret_val2 = 0
+	}
+
+	result := []int{ret_val, ret_val2}
+
+	return c.JSON(http.StatusOK, result)
+}
