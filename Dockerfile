@@ -29,20 +29,24 @@ RUN \
     chmod -R +rwx /usr/share/ats_server
 
 RUN \
-    mkdir /usr/share/ats_server/static && \
-    chmod -R +rwx /usr/share/ats_server/static
-
-RUN \
     touch /usr/share/ats_server/ATS.log && \
     chmod -R +rwx /usr/share/ats_server/ATS.log 
 
 RUN \
-    touch /usr/share/ats_server/static/rev_db.tag.gz && \
-    chmod -R +rwx /usr/share/ats_server/rev_db.tag.gz 
+    mkdir /usr/share/ats_server/static && \
+    chmod -R +rwx /usr/share/ats_server/static
 
 RUN \
-    touch /usr/share/ats_server/static/est_db.tag.gz && \
-    chmod -R +rwx /usr/share/ats_server/est_db.tag.gz
+    touch /usr/share/ats_server/static/rev_db.tag.gz
+
+RUN \
+    chmod +rwx /usr/share/ats_server/rev_db.tag.gz 
+
+RUN \
+    touch /usr/share/ats_server/static/est_db.tag.gz
+
+RUN \
+    chmod +rwx /usr/share/ats_server/est_db.tag.gz
 
 WORKDIR /usr/share/ats_server
 
