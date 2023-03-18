@@ -195,7 +195,7 @@ func InsertReviewHandler(c echo.Context) error {
 		ret_val = 0
 	}
 
-	res2, err2 := db.Exec("INSERT INTO revs_jailed VALUES(?)", nid)
+	res2, err2 := db.Exec("INSERT INTO revs_jailed VALUES(?,?)", nid, nid)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("revs_jailed insert has failed")
