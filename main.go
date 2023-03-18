@@ -13,7 +13,11 @@ func main() {
 	Insert_Initial_Comments()
 
 	e := echo.New()
-	e.Use(middleware.CORS())
+	// e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 	e.GET("/test", TestHandler)
 	e.GET("/ins_rev", InsertReviewHandler)
 	e.GET("/all_revs", GetAllReviewsHandler)
