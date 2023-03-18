@@ -166,13 +166,16 @@ func InsertReviewHandler(c echo.Context) error {
 	rawname := strings.Split(parts[0], "=")
 	nname := strings.ReplaceAll(rawname[1], "SPACE", " ") // replace SPACE
 
-	rawemail := strings.Replace(parts[1], "AT", "@", 1)
+	rawemail := strings.Replace(parts[2], "AT", "@", 1)
 	nemail := strings.Replace(rawemail, "DOT", ".", 1)
 
-	ndate := parts[2]
-	ntime := parts[3]
-	nreview := strings.ReplaceAll(parts[4], "SPACE", " ") //replace SPACE
-	nrating := parts[5]
+	rawdate := time.Now()
+	ndate := rawdate.Format("13-01-2022")
+	ntime := rawdate.Format("15:15:05")
+
+	// ntime := parts[3]
+	nreview := strings.ReplaceAll(parts[3], "SPACE", " ") //replace SPACE
+	nrating := parts[4]
 
 	log.Println(nname)
 	log.Println(nemail)
