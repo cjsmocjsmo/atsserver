@@ -41,6 +41,7 @@ CREATE TABLE est_working(id INTEGER PRIMARY KEY, estid TEXT);
 }
 
 func InsertEstimateHandler(c echo.Context) error {
+	log.Println("Starting InsertEstimate")
 	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
 	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
@@ -55,6 +56,7 @@ func InsertEstimateHandler(c echo.Context) error {
 	// PortSPACEOrchardSPLIT
 	// 903-465-7811SPLITfooATgmailDOTcomSPLIT03-15-2023SPLIT0800SPLITASPACEtreeSPACEfellSPACEneedsSPACEcleanSPACEupSPLIT
 	rawstr := c.QueryString()
+	log.Printf("this is querystring:\n\t %v\n", rawstr)
 
 	parts := strings.Split(rawstr, "SPLIT")
 	rawname := strings.Split(parts[0], "=")

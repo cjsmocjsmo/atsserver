@@ -4,11 +4,11 @@ import (
 	// "compress/gzip"
 	"database/sql"
 	// "encoding/json"
-	"github.com/labstack/echo/v4"
+	// "github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	// "math/rand"
-	"net/http"
+	// "net/http"
 	// "os"
 	// "strconv"
 	// "strings"
@@ -38,12 +38,12 @@ CREATE TABLE admin(id INTEGER PRIMARY KEY, name TEXT, email TEXT, date TEXT, tim
 	log.Println("table admin created")
 }
 
-func admin_sign_in(c echo.Context) error {
+// func admin_sign_in(c echo.Context) error {
 
-	return c.JSON(http.StatusOK, "fuck")
-}
+// 	return c.JSON(http.StatusOK, "fuck")
+// }
 
-func admin_sign_out(c echo.Context) error {
+// func admin_sign_out(c echo.Context) error {
 
-	return c.JSON(http.StatusOK, "fuck")
-}
+// 	return c.JSON(http.StatusOK, "fuck")
+// }
