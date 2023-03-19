@@ -256,8 +256,8 @@ func get_accepted_reviews() []map[string]string {
 
 func GetAllReviewsHandler(c echo.Context) error {
 	log.Println("GetAllReviews has started")
-	all_reviews := [][]map[string]string{}
-
+	// all_reviews := [][]map[string]string{}
+	reviewz := []map[string]string{}
 	allrevs := get_accepted_reviews()
 	for _, arev := range allrevs {
 		log.Println(arev["revid"])
@@ -276,8 +276,6 @@ func GetAllReviewsHandler(c echo.Context) error {
 			log.Fatal(err)
 		}
 		defer rows.Close()
-
-		var revieww []map[string]string
 
 		for rows.Next() {
 			frev := map[string]string{}
@@ -301,13 +299,13 @@ func GetAllReviewsHandler(c echo.Context) error {
 			frev["time"] = time
 			frev["review"] = review
 			frev["rating"] = rating
-			revieww = append(revieww, frev)
+			reviewz = append(reviewz, frev)
 
 		}
-		all_reviews = append(all_reviews, revieww)
+
 		log.Println("GetAllReviews is complete")
 	}
-	return c.JSON(http.StatusOK, all_reviews)
+	return c.JSON(http.StatusOK, reviewz)
 }
 
 func ReviewsGzipHandler(c echo.Context) error {
