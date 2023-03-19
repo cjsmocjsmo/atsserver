@@ -4,18 +4,20 @@ import (
 	"compress/gzip"
 	"database/sql"
 	"encoding/json"
-	"github.com/labstack/echo/v4"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/labstack/echo/v4"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func Create_Estimate_Tables() {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +27,7 @@ func Create_Estimate_Tables() {
 
 	sts := `
 DROP TABLE IF EXISTS estimates;
-CREATE TABLE estimates(id INTEGER PRIMARY KEY, name TEXT, address TEXT, city TEXT, telephone TEXT, email TEXT, reqservdate TEXT, comment TEXT);
+CREATE TABLE estimates(id INTEGER PRIMARY KEY, name TEXT, address TEXT, city TEXT, telephone TEXT, email TEXT, reqservdate TEXT, date TEXT, time TEXT, comment TEXT);
 DROP TABLE IF EXISTS est_completed;
 CREATE TABLE est_completed(id INTEGER PRIMARY KEY, estid TEXT);
 DROP TABLE IF EXISTS est_working;
@@ -42,8 +44,8 @@ CREATE TABLE est_working(id INTEGER PRIMARY KEY, estid TEXT);
 
 func InsertEstimateHandler(c echo.Context) error {
 	log.Println("Starting InsertEstimate")
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -59,26 +61,37 @@ func InsertEstimateHandler(c echo.Context) error {
 	log.Printf("this is querystring:\n\t %v\n", rawstr)
 
 	parts := strings.Split(rawstr, "SPLIT")
+	log.Println(parts)
+
 	rawname := strings.Split(parts[0], "=")
 	nname := strings.ReplaceAll(rawname[1], "SPACE", " ")
 
-	rawemail := strings.Replace(parts[3], "AT", "@", 1)
+	naddress := strings.ReplaceAll(parts[1], "SPACE", " ")
+
+	ncity := strings.ReplaceAll(parts[2], "SPACE", " ")
+
+	ntelephone := parts[3]
+
+	rawemail := strings.Replace(parts[4], "AT", "@", 1)
 	nemail := strings.ReplaceAll(rawemail, "DOT", ".")
 
-	ndate := parts[4]
-	ntime := parts[5]
+	reqservdate := parts[5]
 
-	naddress := strings.ReplaceAll(parts[1], "SPACE", " ")
-	ncity := strings.ReplaceAll(parts[2], "SPACE", " ")
+	rawdate := time.Now()
+	ndate := rawdate.Format("13-01-2022")
+	ntime := rawdate.Format("15:15:05")
+
+	// ndate := parts[4]
+	// ntime := parts[5]
 
 	ncomment := strings.ReplaceAll(parts[6], "SPACE", " ")
 
 	nid := UUID()
 
-	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?,?)", nid, nname, nemail, ndate, ntime, naddress, ncity, ncomment)
+	res, err := db.Exec("INSERT INTO estimates VALUES(?,?,?,?,?,?,?,?,?,?)", nid, nname, naddress, ncity, ntelephone, nemail, reqservdate, ndate, ntime, ncomment)
 	if err != nil {
 		log.Println(err)
-		log.Println("review insert has failed")
+		log.Println("estimates insert has failed")
 	}
 
 	var ret_val int
@@ -106,13 +119,14 @@ func InsertEstimateHandler(c echo.Context) error {
 	}
 
 	r1 := []string{strconv.Itoa(ret_val), strconv.Itoa(ret_val2)}
+	log.Printf("this is insert estimates:\n\t %v", r1)
 
 	return c.JSON(http.StatusOK, r1)
 }
 
 func GetAllEstimatesHandler(c echo.Context) error {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -149,40 +163,46 @@ func GetAllEstimatesHandler(c echo.Context) error {
 		for rows.Next() {
 			est := map[string]string{}
 			var id string
-
 			var name string
-			var email string
-			var date string
-			var time string
 			var address string
 			var city string
+			var telephone string
+			var email string
+			var reqservdate string
+			var date string
+			var time string
 			var comment string
 
-			err = rows.Scan(&id, &name, &email, &date, &time, &address, &city, &comment)
+			err = rows.Scan(&id, &name, &address, &city, &telephone, &email, &reqservdate, &date, &time, &comment)
 			if err != nil {
 				log.Println(err)
 			}
 
 			est["id"] = id
 			est["name"] = name
-			est["email"] = email
-			est["date"] = date
-			est["time"] = time
 			est["address"] = address
 			est["city"] = city
+			est["telephone"] = telephone
+			est["email"] = email
+			est["reqservdate"] = reqservdate
+			est["date"] = date
+			est["time"] = time
 			est["comment"] = comment
 			est_map = append(est_map, est)
 		}
 	}
 
+	log.Printf("this is est_map:\n\t %v", est_map)
+
 	return c.JSON(http.StatusOK, est_map)
 }
 
 func CompletEstimateHandler(c echo.Context) error {
+	log.Println("Complete estimate has started")
 	to_be_del := c.QueryParam("estvid")
 
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -219,12 +239,14 @@ func CompletEstimateHandler(c echo.Context) error {
 
 	result := []int{ret_val, ret_val2}
 
+	log.Println("Complete estimate is finished")
+
 	return c.JSON(http.StatusOK, result)
 }
 
 func EstimatesGzipHandler(c echo.Context) error {
 	log.Println("starting GetAllReviewsHandler")
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// // db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
 	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
@@ -243,27 +265,30 @@ func EstimatesGzipHandler(c echo.Context) error {
 	for rows.Next() {
 		est := map[string]string{}
 		var id string
-
 		var name string
-		var email string
-		var date string
-		var time string
 		var address string
 		var city string
+		var telephone string
+		var email string
+		var reqservdate string
+		var date string
+		var time string
 		var comment string
 
-		err = rows.Scan(&id, &name, &email, &date, &time, &address, &city, &comment)
+		err = rows.Scan(&id, &name, &address, &city, &telephone, &email, &reqservdate, &date, &time, &comment)
 		if err != nil {
 			log.Println(err)
 		}
 
 		est["id"] = id
 		est["name"] = name
-		est["email"] = email
-		est["date"] = date
-		est["time"] = time
 		est["address"] = address
 		est["city"] = city
+		est["telephone"] = telephone
+		est["email"] = email
+		est["reqservdate"] = reqservdate
+		est["date"] = date
+		est["time"] = time
 		est["comment"] = comment
 		estimates = append(estimates, est)
 
@@ -276,12 +301,17 @@ func EstimatesGzipHandler(c echo.Context) error {
 	}
 
 	//gzip file and move it to static http folder
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
 	f, _ := os.Create("static/est_db.tag.gz") //test
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
 	w.Write([]byte(jsonstr))
 	w.Close()
+
+	log.Println("Estimates gzip is complete")
 
 	return c.JSON(http.StatusOK, "Backup Created")
 }

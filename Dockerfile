@@ -21,7 +21,7 @@ FROM debian:bookworm-slim
 RUN \
     apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get -y install sqlite3 sqlite-utils && \
+    apt-get -y install sqlite3 && \
     apt-get -y autoclean && \
     apt-get -y autoremove
 RUN \

@@ -4,8 +4,6 @@ import (
 	"compress/gzip"
 	"database/sql"
 	"encoding/json"
-	"github.com/labstack/echo/v4"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"math/rand"
 	"net/http"
@@ -13,11 +11,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/labstack/echo/v4"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func ATS_Logging() {
-	logfile := os.Getenv("ATS_LOG_PATH")
-	// logfile := "/media/charliepi/HD/ats/atsserver/ATS.log"
+	// logfile := os.Getenv("ATS_LOG_PATH")
+	logfile := "/media/charliepi/HD/ats/atsserver/ATS.log"
 	file, err := os.OpenFile(logfile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -27,8 +28,8 @@ func ATS_Logging() {
 }
 
 func Create_Reviews_Tables() {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -56,8 +57,8 @@ CREATE TABLE revs_jailed(id INTEGER PRIMARY KEY, revid TEXT);
 }
 
 func Insert_Comment_One() {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -80,8 +81,8 @@ INSERT INTO revs_accepted(id, revid) VALUES('1', '1');
 }
 
 func Insert_comment_two() {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -103,8 +104,8 @@ INSERT INTO revs_accepted(id, revid) VALUES('2', '2');
 }
 
 func Insert_comment_three() {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -149,8 +150,8 @@ func TestHandler(c echo.Context) error {
 
 func InsertReviewHandler(c echo.Context) error {
 	log.Println("Starting InsertReview")
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -159,14 +160,14 @@ func InsertReviewHandler(c echo.Context) error {
 	nid := UUID()
 
 	// MUST BE IN THE FORMAT
-	// entry=JoSPACEBlowSPLITcjsmoATgmailDOTcomSPLIT2024-03-03SPLIT11PMSPLITjobSPACEwellSPACEdoneSPLIT5
+	// entry=JoSPACEBlowSPLITcjsmoATgmailDOTcomSPLITjobSPACEwellSPACEdoneSPLIT5
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "SPLIT")
 
 	rawname := strings.Split(parts[0], "=")
 	nname := strings.ReplaceAll(rawname[1], "SPACE", " ") // replace SPACE
 
-	rawemail := strings.Replace(parts[2], "AT", "@", 1)
+	rawemail := strings.Replace(parts[1], "AT", "@", 1)
 	nemail := strings.Replace(rawemail, "DOT", ".", 1)
 
 	rawdate := time.Now()
@@ -175,7 +176,7 @@ func InsertReviewHandler(c echo.Context) error {
 
 	// ntime := parts[3]
 	nreview := strings.ReplaceAll(parts[3], "SPACE", " ") //replace SPACE
-	nrating := parts[4]
+	nrating := parts[2]
 
 	log.Println(nname)
 	log.Println(nemail)
@@ -184,7 +185,7 @@ func InsertReviewHandler(c echo.Context) error {
 	log.Println(nreview)
 	log.Println(nrating)
 
-	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?)", nid, nname, nemail, ndate, ntime, nreview, nrating)
+	res, err := db.Exec("INSERT INTO reviews VALUES(?,?,?,?,?,?,?)", &nid, &nname, &nemail, &ndate, &ntime, &nreview, &nrating)
 	if err != nil {
 		log.Println(err)
 		log.Println("review insert has failed")
@@ -213,14 +214,15 @@ func InsertReviewHandler(c echo.Context) error {
 	}
 
 	result := []string{strconv.Itoa(ret_val), strconv.Itoa(ret_val2)}
+	log.Printf("this is insert review exit status:\n\t %v", result)
 
 	return c.JSON(http.StatusOK, result)
 }
 
 func get_accepted_reviews() []map[string]string {
 	log.Println("starting GetAllReviewsHandler")
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -261,8 +263,8 @@ func GetAllReviewsHandler(c echo.Context) error {
 		log.Println(arev["revid"])
 
 		log.Println("starting GetAllReviewsHandler")
-		db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-		// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+		// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+		db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 		if err != nil {
 			log.Fatal((err))
 		}
@@ -310,8 +312,8 @@ func GetAllReviewsHandler(c echo.Context) error {
 
 func ReviewsGzipHandler(c echo.Context) error {
 	log.Println("starting GetAllReviewsHandler")
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -373,8 +375,8 @@ func ReviewsGzipHandler(c echo.Context) error {
 }
 
 func AcceptReviewHandler(c echo.Context) error {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -414,12 +416,14 @@ func AcceptReviewHandler(c echo.Context) error {
 
 	result := []int{ret_val, ret_val2}
 
+	log.Printf("This is accept review return status:\n\t %v", result)
+
 	return c.JSON(http.StatusOK, result)
 }
 
 func RejectReviewHandler(c echo.Context) error {
-	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -458,6 +462,8 @@ func RejectReviewHandler(c echo.Context) error {
 	}
 
 	result := []int{ret_val, ret_val2}
+
+	log.Printf("This is reject review return status:\n\t %v", result)
 
 	return c.JSON(http.StatusOK, result)
 }

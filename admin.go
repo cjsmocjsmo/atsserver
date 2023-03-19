@@ -5,8 +5,9 @@ import (
 	"database/sql"
 	// "encoding/json"
 	// "github.com/labstack/echo/v4"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
+
+	_ "github.com/mattn/go-sqlite3"
 	// "math/rand"
 	// "net/http"
 	// "os"
@@ -16,7 +17,7 @@ import (
 )
 
 func Create_Admin_Tables() {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// // db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
 	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
