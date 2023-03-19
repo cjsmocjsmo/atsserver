@@ -251,6 +251,7 @@ func get_accepted_reviews() []map[string]string {
 		revv["revid"] = revid
 		accepted = append(accepted, revv)
 	}
+
 	return accepted
 }
 
@@ -259,6 +260,10 @@ func GetAllReviewsHandler(c echo.Context) error {
 	// all_reviews := [][]map[string]string{}
 	reviewz := []map[string]string{}
 	allrevs := get_accepted_reviews()
+	if len(allrevs) == 0 {
+		return c.JSON(http.StatusOK, "0")
+	}
+
 	for _, arev := range allrevs {
 		log.Println(arev["revid"])
 
