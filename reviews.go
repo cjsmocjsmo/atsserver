@@ -28,8 +28,8 @@ func ATS_Logging() {
 }
 
 func Create_Reviews_Tables() {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -57,8 +57,8 @@ CREATE TABLE revs_jailed(id INTEGER PRIMARY KEY, revid TEXT);
 }
 
 func Insert_Comment_One() {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -81,8 +81,8 @@ INSERT INTO revs_accepted(id, revid) VALUES('1', '1');
 }
 
 func Insert_comment_two() {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -104,8 +104,8 @@ INSERT INTO revs_accepted(id, revid) VALUES('2', '2');
 }
 
 func Insert_comment_three() {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -150,8 +150,8 @@ func TestHandler(c echo.Context) error {
 
 func InsertReviewHandler(c echo.Context) error {
 	log.Println("Starting InsertReview")
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -221,8 +221,8 @@ func InsertReviewHandler(c echo.Context) error {
 
 func get_accepted_reviews() []map[string]string {
 	log.Println("starting GetAllReviewsHandler")
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -263,8 +263,8 @@ func GetAllReviewsHandler(c echo.Context) error {
 		log.Println(arev["revid"])
 
 		log.Println("starting GetAllReviewsHandler")
-		// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-		db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+		db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+		// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 		if err != nil {
 			log.Fatal((err))
 		}
@@ -312,8 +312,8 @@ func GetAllReviewsHandler(c echo.Context) error {
 
 func ReviewsGzipHandler(c echo.Context) error {
 	log.Println("starting GetAllReviewsHandler")
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -375,8 +375,8 @@ func ReviewsGzipHandler(c echo.Context) error {
 }
 
 func AcceptReviewHandler(c echo.Context) error {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -422,8 +422,8 @@ func AcceptReviewHandler(c echo.Context) error {
 }
 
 func RejectReviewHandler(c echo.Context) error {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}

@@ -16,8 +16,8 @@ import (
 )
 
 func Create_Estimate_Tables() {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") // production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 
 	if err != nil {
 		log.Fatal(err)
@@ -44,8 +44,8 @@ CREATE TABLE est_working(id INTEGER PRIMARY KEY, estid TEXT);
 
 func InsertEstimateHandler(c echo.Context) error {
 	log.Println("Starting InsertEstimate")
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -125,8 +125,8 @@ func InsertEstimateHandler(c echo.Context) error {
 }
 
 func GetAllEstimatesHandler(c echo.Context) error {
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -201,8 +201,8 @@ func CompletEstimateHandler(c echo.Context) error {
 	log.Println("Complete estimate has started")
 	to_be_del := c.QueryParam("estvid")
 
-	// db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -246,8 +246,8 @@ func CompletEstimateHandler(c echo.Context) error {
 
 func EstimatesGzipHandler(c echo.Context) error {
 	log.Println("starting GetAllReviewsHandler")
-	// // db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
-	db, err := sql.Open("sqlite3", "atsinfo.db") //testing
+	db, err := sql.Open("sqlite3", "/usr/share/ats_server/atsinfo.db") //production
+	// db, err := sql.Open("sqlite3", "atsinfo.db") //testing
 	if err != nil {
 		log.Fatal((err))
 	}
@@ -303,8 +303,8 @@ func EstimatesGzipHandler(c echo.Context) error {
 	//gzip file and move it to static http folder
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
-	f, _ := os.Create("static/est_db.tag.gz") //test
+	f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
+	// f, _ := os.Create("static/est_db.tag.gz") //test
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
