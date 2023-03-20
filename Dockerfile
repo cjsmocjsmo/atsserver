@@ -47,6 +47,7 @@ WORKDIR /usr/share/ats_server
 
 COPY --from=builder /go/src/atserver/main .
 
+ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
 
 STOPSIGNAL SIGINT
