@@ -16,7 +16,6 @@ RUN go get -v /go/src/atserver
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main /go/src/atserver
 
 FROM debian:bookworm-slim
-# FROM ubuntu:22.04
 
 RUN \
     apt-get update && \
@@ -32,20 +31,22 @@ RUN \
     touch /usr/share/ats_server/ATS.log
 
 RUN \
-    mkdir /usr/share/ats_server/static
-
-RUN \
-    touch /usr/share/ats_server/static/rev_db.tar.gz
-
-RUN \
-    touch /usr/share/ats_server/static/est_db.tar.gz
-
-RUN \
+    mkdir /usr/share/ats_server/static && \
+    touch /usr/share/ats_server/static/rev_db.tar.gz && \
+    touch /usr/share/ats_server/static/est_db.tar.gz && \
     chmod -R +rwx /usr/share/ats_server/static
+
+RUN \
+    mkdir /usr/share/ats_server/users && \
+    chmod -R +rwx /usr/share/ats_server/users
 
 WORKDIR /usr/share/ats_server
 
 COPY --from=builder /go/src/atserver/main .
+
+COPY /users/user1.yaml .
+
+COPY /users/user2.yaml .
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
