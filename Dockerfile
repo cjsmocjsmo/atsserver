@@ -3,13 +3,13 @@ FROM golang:buster AS builder
 RUN mkdir /go/src/atserver
 WORKDIR /go/src/atserver
 
-COPY main.go .
-COPY reviews.go .
-COPY estimates.go .
 COPY admin.go .
-
+COPY estimates.go .
 COPY go.mod .
 COPY go.sum .
+COPY main.go .
+COPY mktables.go .
+COPY reviews.go .
 
 RUN export GOPATH=/go/src/atserver
 RUN go get -v /go/src/atserver
