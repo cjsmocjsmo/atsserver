@@ -3,13 +3,16 @@ package main
 import (
 	// "github.com/labstack/echo/v4"
 	"database/sql"
+
 	_ "github.com/mattn/go-sqlite3"
+
 	// "encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v3"
 	// "net/http"
 	// "strings"
 )
@@ -25,10 +28,16 @@ type UserS struct {
 }
 
 func glob_user_dir() []string {
-	pattern := "/usr/share/ats_server/users/*.yaml"
+	var pattern string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		pattern = os.Getenv("ATS_PATH") + "/users/*.yaml"
+	} else {
+		pattern = "/media/charliepi/HD/ats/atsserver/users/*.yaml" //testing
+	}
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 	return matches
 }
@@ -50,66 +59,59 @@ func parse_admin_list() []UserS {
 		}
 		user_list = append(user_list, u)
 	}
-	fmt.Println(user_list)
+	fmt.Printf("this is user_list %v", user_list)
 	return user_list
 }
 
 func Insert_Admins(x UserS) int {
 	id := UUID()
 	fmt.Println(x.Name)
-	bpath := os.Getenv("ATS_PATH") + "/atsinfo.db"
-	db, err := sql.Open("sqlite3", bpath) // production
+	fmt.Println(x.Email)
+	fmt.Println(x.Date)
+	fmt.Println(x.Time)
+	fmt.Println(x.Token)
+	fmt.Println(x.Password)
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
 
 	if err != nil {
-		db, err2 := sql.Open("sqlite3", "atsinfo.db") //testing
-		if err2 != nil {
-			log.Fatal(err2)
-		}
-		defer db.Close()
-
-		res, err := db.Exec("INSERT INTO admin VALUES(?,?,?,?,?,?,?)", &id, &x.Name, &x.Email, &x.Date, &x.Time, &x.Token, &x.Password)
-		if err != nil {
-			log.Println(err)
-			log.Println("admin insert has failed")
-		}
-		var ret_val int
-		_, err = res.LastInsertId()
-		if err != nil {
-			log.Println(err)
-			ret_val = 1
-		} else {
-			ret_val = 0
-		}
-
-		log.Println("insert admin complete")
-		return ret_val
+		log.Fatal(err)
 	}
 
 	defer db.Close()
 
-	res, err := db.Exec("INSERT INTO admin VALUES(?,?,?,?,?,?,?)", &id, &x.Name, &x.Email, &x.Date, &x.Time, &x.Token, &x.Password)
+	res, err := db.Exec("INSERT INTO admin VALUES(?,?,?,?,?,?,?)", id, x.Name, x.Email, x.Date, x.Time, x.Token, x.Password)
 	if err != nil {
-		log.Println(err)
+		fmt.Printf("this is insert err %v", err)
 		log.Println("admin insert has failed")
 	}
 	var ret_val int
 	_, err = res.LastInsertId()
 	if err != nil {
-		log.Println(err)
+		log.Printf("this is last insert id err %v", err)
 		ret_val = 1
 	} else {
 		ret_val = 0
 	}
 
-	log.Println("insert admin complete")
+	fmt.Printf("insert admin return val %v", ret_val)
+	log.Printf("insert admin return val %v", ret_val)
 	return ret_val
 }
 
 func Create_Admin() {
 	alist := parse_admin_list()
-	for _, admin := range alist {
-		Insert_Admins(admin)
-	}
+	fmt.Println(alist)
+	// for _, admin := range alist {
+	// 	Insert_Admins(admin)
+	// }
 }
 
 // func parse_query_string(x string) (string, string, string) {

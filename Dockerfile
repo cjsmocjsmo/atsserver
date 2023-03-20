@@ -50,6 +50,7 @@ COPY /users/user2.yaml .
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
+ENV ATS_DOCKER_VAR=DOCKER
 
 STOPSIGNAL SIGINT
 CMD ["/usr/share/ats_server/main"]
