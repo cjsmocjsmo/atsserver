@@ -1,0 +1,1 @@
+echo -n some_passphrase | sha256sum
