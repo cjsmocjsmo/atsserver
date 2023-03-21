@@ -5,6 +5,7 @@ import (
 	// "github.com/labstack/echo/v4/middleware"
 	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"gopkg.in/yaml.v3"
@@ -30,7 +31,7 @@ func glob_user_dir() []string {
 	if boo {
 		pattern = os.Getenv("ATS_PATH") + "/users/*.yaml"
 	} else {
-		pattern = "/media/charliepi/HD/ats/atsserver/users/*.yaml" //testing
+		pattern = "/media/charliepi/HD/ats/atsserver/*.yaml" //testing
 	}
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
@@ -123,8 +124,9 @@ func parse_query_string(x string) (string, string, string) {
 func get_hash(x string) string {
 	h := sha256.New()
 	h.Write([]byte(x))
-	hash := h.Sum(nil)
-	return string(hash)
+	ash := h.Sum(nil)
+	hash := hex.EncodeToString(ash)
+	return hash
 }
 
 func get_admin_by_email(x string) map[string]string {
@@ -179,9 +181,9 @@ func get_admin_by_email(x string) map[string]string {
 }
 
 func comp_str(x string, y string) bool {
-	fmt.Println(x)
-	fmt.Println(y)
-	if x != y {
+	log.Printf("this is x:\n\t %v", string(x))
+	log.Printf("thi sis y:\n\t %v", string(y))
+	if string(x) != string(y) {
 		return false
 	} else {
 		return true
