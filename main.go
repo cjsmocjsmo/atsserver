@@ -8,10 +8,11 @@ import (
 func main() {
 
 	ATS_Logging()
+	Create_Admin_Tables()
 	Create_Admin()
 	Create_Reviews_Tables()
-	Create_Estimate_Tables()
 	Insert_Initial_Comments()
+	Create_Estimate_Tables()
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -22,6 +23,7 @@ func main() {
 
 	e.GET("/login", LoginHandler)
 	e.GET("/logout", LogoutHandler)
+
 	e.GET("/ins_rev", InsertReviewHandler)
 	e.GET("/all_revs", GetAllReviewsHandler)
 	e.GET("/rev_accept", AcceptReviewHandler)
@@ -34,7 +36,7 @@ func main() {
 	e.GET("/revbup", ReviewsGzipHandler)
 	e.GET("/estbup", EstimatesGzipHandler)
 
-	e.Static("/static", "./static") // testing
-	// e.Static("/static", "/usr/share/ats_server/static") // production for backup.tar.gz
+	// e.Static("/static", "./static") // testing
+	e.Static("/static", "/usr/share/ats_server/static") // production for backup.tar.gz
 	e.Logger.Fatal(e.Start(":8080"))
 }

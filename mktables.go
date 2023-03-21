@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func Create_Admin_Tables() {
@@ -17,9 +17,12 @@ func Create_Admin_Tables() {
 		db_file = "./atsinfo.db" //testing
 	}
 
+	fmt.Println(db_file)
+
 	db, err := sql.Open("sqlite3", db_file) // production
 
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal(err)
 	}
 
@@ -27,11 +30,12 @@ func Create_Admin_Tables() {
 
 	sts := `
 DROP TABLE IF EXISTS admin;
-CREATE TABLE admin(id INTEGER PRIMARY KEY, name TEXT, email TEXT, date TEXT, time TEXT, token TEXT, pword TEXT);
+CREATE TABLE admin(id INTEGER PRIMARY KEY, name TEXT, email TEXT, date TEXT, time TEXT, token TEXT, password TEXT);
 `
 	_, err = db.Exec(sts)
 
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal(err)
 	}
 

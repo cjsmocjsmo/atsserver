@@ -5,6 +5,7 @@ import (
 	// "github.com/labstack/echo/v4/middleware"
 	"crypto/sha256"
 	"database/sql"
+	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"gopkg.in/yaml.v3"
 	"log"
@@ -53,6 +54,7 @@ func parse_admin_list() []UserS {
 		}
 		user_list = append(user_list, u)
 	}
+	fmt.Println(user_list)
 	return user_list
 }
 
@@ -77,25 +79,36 @@ func Insert_Admins(x UserS) int {
 	newemail := strings.Replace(x.Email, "AT", "@", 1)
 	nemail := strings.ReplaceAll(newemail, "DOT", ".")
 	ndate := strings.ReplaceAll(x.Date, "_", "-")
+	fmt.Println(id)
+	fmt.Println(x.Name)
+	fmt.Println(nemail)
+	fmt.Println(ndate)
+	fmt.Println(x.Time)
+	fmt.Println(x.Token)
+	fmt.Println(x.Password)
 
 	res, err := db.Exec("INSERT INTO admin VALUES(?,?,?,?,?,?,?)", id, x.Name, nemail, ndate, x.Time, x.Token, x.Password)
 	if err != nil {
+		fmt.Println(err)
 		log.Println("admin insert has failed")
 	}
 	var ret_val int
 	_, err = res.LastInsertId()
 	if err != nil {
+		fmt.Println(err)
 		log.Printf("this is last insert id err %v", err)
 		ret_val = 1
 	} else {
 		ret_val = 0
 	}
 	log.Printf("insert admin return val %v", ret_val)
+	// ret_val := 100
 	return ret_val
 }
 
 func Create_Admin() {
 	alist := parse_admin_list()
+
 	for _, admin := range alist {
 		Insert_Admins(admin)
 	}
