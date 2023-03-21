@@ -44,9 +44,9 @@ WORKDIR /usr/share/ats_server
 
 COPY --from=builder /go/src/atserver/main .
 
-COPY /users/user1.yaml ./users
+COPY user1.yaml ./users
 
-COPY /users/user2.yaml ./users
+COPY user2.yaml ./users
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log

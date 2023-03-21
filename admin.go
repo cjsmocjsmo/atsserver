@@ -1,24 +1,20 @@
 package main
 
 import (
-	// "github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4"
+	// "github.com/labstack/echo/v4/middleware"
+	"crypto/sha256"
 	"database/sql"
-
 	_ "github.com/mattn/go-sqlite3"
-
-	// "encoding/json"
-	"fmt"
+	"gopkg.in/yaml.v3"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
-
-	"gopkg.in/yaml.v3"
-	// "net/http"
-	// "strings"
+	"strings"
 )
 
 type UserS struct {
-	// ID       string `yaml:"id"`
 	Name     string `yaml:"name"`
 	Email    string `yaml:"email"`
 	Token    string `yaml:"token"`
@@ -37,7 +33,7 @@ func glob_user_dir() []string {
 	}
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	return matches
 }
@@ -50,27 +46,18 @@ func parse_admin_list() []UserS {
 		if err != nil {
 			log.Println(err)
 		}
-
 		u := UserS{}
-
 		err = yaml.Unmarshal(data, &u)
 		if err != nil {
 			log.Println(err)
 		}
 		user_list = append(user_list, u)
 	}
-	fmt.Printf("this is user_list %v", user_list)
 	return user_list
 }
 
 func Insert_Admins(x UserS) int {
 	id := UUID()
-	fmt.Println(x.Name)
-	fmt.Println(x.Email)
-	fmt.Println(x.Date)
-	fmt.Println(x.Time)
-	fmt.Println(x.Token)
-	fmt.Println(x.Password)
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -87,9 +74,12 @@ func Insert_Admins(x UserS) int {
 
 	defer db.Close()
 
-	res, err := db.Exec("INSERT INTO admin VALUES(?,?,?,?,?,?,?)", id, x.Name, x.Email, x.Date, x.Time, x.Token, x.Password)
+	newemail := strings.Replace(x.Email, "AT", "@", 1)
+	nemail := strings.ReplaceAll(newemail, "DOT", ".")
+	ndate := strings.ReplaceAll(x.Date, "_", "-")
+
+	res, err := db.Exec("INSERT INTO admin VALUES(?,?,?,?,?,?,?)", id, x.Name, nemail, ndate, x.Time, x.Token, x.Password)
 	if err != nil {
-		fmt.Printf("this is insert err %v", err)
 		log.Println("admin insert has failed")
 	}
 	var ret_val int
@@ -100,34 +90,111 @@ func Insert_Admins(x UserS) int {
 	} else {
 		ret_val = 0
 	}
-
-	fmt.Printf("insert admin return val %v", ret_val)
 	log.Printf("insert admin return val %v", ret_val)
 	return ret_val
 }
 
 func Create_Admin() {
 	alist := parse_admin_list()
-	fmt.Println(alist)
-	// for _, admin := range alist {
-	// 	Insert_Admins(admin)
-	// }
+	for _, admin := range alist {
+		Insert_Admins(admin)
+	}
 }
 
-// func parse_query_string(x string) (string, string, string) {
-// 	parts := strings.Split(x, "_")
-// 	rawname := strings.Split(parts[0], "=")
-// 	return rawname[1], parts[1], parts[2]
-// }
+func parse_query_string(x string) (string, string, string) {
+	parts := strings.Split(x, "_")
+	rawname := strings.Split(parts[0], "=")
+	return rawname[1], parts[1], parts[2]
+}
 
-// func login(c echo.Context) error {
-// 	rawstr := c.QueryString()
-// 	t, e, p := parse_query_string(rawstr)
+func get_hash(x string) string {
+	h := sha256.New()
+	h.Write([]byte(x))
+	hash := h.Sum(nil)
+	return string(hash)
+}
 
-// 	return c.JSON(http.StatusOK, "eat me")
-// }
+func get_admin_by_email(x string) map[string]string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db"
+	}
 
-// func logout(c echo.Context) error {
+	db, err := sql.Open("sqlite3", db_file) //production
 
-// 	return c.JSON(http.StatusOK, "eat me")
-// }
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM admin WHERE email=?", x)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	// admin := map[string]string
+	aadmin := map[string]string{}
+	for rows.Next() {
+
+		var id string
+		var name string
+		var email string
+		var date string
+		var time string
+		var token string
+		var password string
+		// id INTEGER PRIMARY KEY, name TEXT, email TEXT, date TEXT, time TEXT, token TEXT, pword TEXT);
+		err = rows.Scan(&id, &name, &email, &date, &time, &token, &password)
+		if err != nil {
+			log.Println(err)
+		}
+
+		aadmin["id"] = id
+		aadmin["name"] = name
+		aadmin["email"] = email
+		aadmin["date"] = date
+		aadmin["time"] = time
+		aadmin["token"] = token
+		aadmin["password"] = password
+	}
+	return aadmin
+}
+
+func comp_str(x string, y string) bool {
+	if x != y {
+		return false
+	} else {
+		return true
+	}
+}
+
+func LoginHandler(c echo.Context) error {
+	rawstr := c.QueryString()
+	t, e, p := parse_query_string(rawstr)
+	thash := get_hash(t)
+	ehash := get_hash(e)
+	phash := get_hash(p)
+	admin_info_db := get_admin_by_email(e)
+	edb := get_hash(admin_info_db["email"])
+
+	comp1 := comp_str(thash, admin_info_db["token"])
+	comp2 := comp_str(ehash, edb)
+	comp3 := comp_str(phash, admin_info_db["password"])
+
+	isLoggedIn := false
+	if comp1 && comp2 && comp3 {
+		isLoggedIn = true
+	}
+
+	return c.JSON(http.StatusOK, isLoggedIn)
+}
+
+func LogoutHandler(c echo.Context) error {
+
+	return c.JSON(http.StatusOK, "logoutHandler")
+}

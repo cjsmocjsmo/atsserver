@@ -278,8 +278,6 @@ func GetAllReviewsHandler(c echo.Context) error {
 	}
 
 	for _, arev := range allrevs {
-		log.Println(arev["revid"])
-
 		log.Println("starting GetAllReviewsHandler")
 		var db_file string
 		_, boo := os.LookupEnv("ATS_DOCKER_VAR")
