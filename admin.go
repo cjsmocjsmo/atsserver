@@ -179,6 +179,8 @@ func get_admin_by_email(x string) map[string]string {
 }
 
 func comp_str(x string, y string) bool {
+	fmt.Println(x)
+	fmt.Println(y)
 	if x != y {
 		return false
 	} else {
