@@ -31,11 +31,14 @@ RUN \
     touch /usr/share/ats_server/ATS.log
 
 RUN \
-    mkdir /usr/share/ats_server/static && \
-    touch /usr/share/ats_server/static/dbbackup.tag.gz && \
-    touch /usr/share/ats_server/static/rev_db.tar.gz && \
-    touch /usr/share/ats_server/static/est_db.tar.gz && \
-    chmod -R +rwx /usr/share/ats_server/static
+    mkdir /usr/share/ats_server/static
+    
+
+    #  && \
+    # touch /usr/share/ats_server/static/dbbackup.tag.gz && \
+    # touch /usr/share/ats_server/static/rev_db.tar.gz && \
+    # touch /usr/share/ats_server/static/est_db.tar.gz && \
+    # chmod -R +rwx /usr/share/ats_server/static
 
 RUN \
     mkdir /usr/share/ats_server/users && \
@@ -44,6 +47,12 @@ RUN \
 WORKDIR /usr/share/ats_server
 
 COPY --from=builder /go/src/atserver/main .
+
+WORKDIR /use/share/ats_server/static
+
+COPY static/ddbbackup.tar.gz .
+COPY static/est_db.tar.gz .
+COPY static/rev_db.tar.gz .
 
 WORKDIR /usr/share/ats_server/users
 

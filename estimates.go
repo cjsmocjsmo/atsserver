@@ -22,7 +22,7 @@ func InsertEstimateHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -112,7 +112,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -195,7 +195,7 @@ func CompletEstimateHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -248,7 +248,7 @@ func EstimatesGzipHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production

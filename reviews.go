@@ -39,7 +39,7 @@ func Insert_Comment_One() {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) // production
@@ -70,7 +70,7 @@ func Insert_comment_two() {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //testing
@@ -99,7 +99,7 @@ func Insert_comment_three() {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) // production
@@ -152,7 +152,7 @@ func InsertReviewHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -231,7 +231,7 @@ func get_accepted_reviews() []map[string]string {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -284,7 +284,7 @@ func GetAllReviewsHandler(c echo.Context) error {
 		if boo {
 			db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 		} else {
-			db_file = "/atsinfo.db"
+			db_file = "atsinfo.db"
 		}
 
 		db, err := sql.Open("sqlite3", db_file) //production
@@ -339,7 +339,7 @@ func ReviewsGzipHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -411,7 +411,7 @@ func AcceptReviewHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
@@ -467,7 +467,7 @@ func RejectReviewHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production

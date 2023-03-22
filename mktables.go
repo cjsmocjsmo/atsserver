@@ -3,9 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func Create_Admin_Tables() {
@@ -48,7 +49,7 @@ func Create_Estimate_Tables() {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) // production
@@ -82,7 +83,7 @@ func Create_Reviews_Tables() {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) // production

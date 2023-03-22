@@ -4,14 +4,15 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
-	"github.com/labstack/echo/v4"
-	_ "github.com/mattn/go-sqlite3"
-	"gopkg.in/yaml.v3"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/labstack/echo/v4"
+	_ "github.com/mattn/go-sqlite3"
+	"gopkg.in/yaml.v3"
 )
 
 type UserS struct {
@@ -63,7 +64,7 @@ func Insert_Admins(x UserS) int {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db" //testing
+		db_file = "atsinfo.db" //testing
 	}
 
 	db, err := sql.Open("sqlite3", db_file) // production
@@ -121,7 +122,7 @@ func get_admin_by_email(x string) map[string]string {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db"
+		db_file = "atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production
