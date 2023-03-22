@@ -50,7 +50,7 @@ COPY --from=builder /go/src/atserver/main .
 
 WORKDIR /use/share/ats_server/static
 
-COPY static/ddbbackup.tar.gz .
+COPY static/dbbackup.tar.gz .
 COPY static/est_db.tar.gz .
 COPY static/rev_db.tar.gz .
 
