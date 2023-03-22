@@ -32,6 +32,7 @@ RUN \
 
 RUN \
     mkdir /usr/share/ats_server/static && \
+    touch /usr/share/ats_server/static/dbbackup.tag.gz && \
     touch /usr/share/ats_server/static/rev_db.tar.gz && \
     touch /usr/share/ats_server/static/est_db.tar.gz && \
     chmod -R +rwx /usr/share/ats_server/static
