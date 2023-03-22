@@ -36,7 +36,7 @@ func main() {
 	e.GET("/revbup", ReviewsGzipHandler)
 	e.GET("/estbup", EstimatesGzipHandler)
 
-	e.File("/dbbackup", "static/dbbackup.tag.gz") // testing
+	e.File("/dbbackup", "static/dbbackup.tar.gz") // testing
 	e.File("/revbackup", "static/rev_db.tar.gz")
 	e.File("/estbackup", "static/est_db.tar.gz")
 
