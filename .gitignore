@@ -1,7 +1,5 @@
-/static
+/users
 ATS.log
 atsinfo.db
 atsserver
-/users
 test.py
-test.sh
