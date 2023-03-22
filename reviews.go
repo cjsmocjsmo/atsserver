@@ -339,7 +339,7 @@ func ReviewsGzipHandler(c echo.Context) error {
 	if boo {
 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
 	} else {
-		db_file = "/atsinfo.db"
+		db_file = "/media/charliepi/HD/ats/atsserver/atsinfo.db"
 	}
 
 	db, err := sql.Open("sqlite3", db_file) //production

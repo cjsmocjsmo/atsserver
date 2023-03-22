@@ -36,7 +36,7 @@ func main() {
 	e.GET("/revbup", ReviewsGzipHandler)
 	e.GET("/estbup", EstimatesGzipHandler)
 
-	// e.Static("/static", "./static") // testing
-	e.Static("/static", "/usr/share/ats_server/static") // production for backup.tar.gz
+	e.Static("/static", "./static") // testing
+	// e.Static("/static", "/usr/share/ats_server/static") // production for backup.tar.gz
 	e.Logger.Fatal(e.Start(":8080"))
 }
