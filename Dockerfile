@@ -8,6 +8,7 @@ COPY estimates.go .
 COPY go.mod .
 COPY go.sum .
 COPY main.go .
+COPY media.go .
 COPY mktables.go .
 COPY reviews.go .
 
