@@ -9,6 +9,68 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func Create_Videos_Tables() {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	sts := `
+DROP TABLE IF EXISTS videos;
+CREATE TABLE videos(id INTEGER PRIMARY KEY, email TEXT, date TEXT, photo TEXT);
+`
+	_, err = db.Exec(sts)
+
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	log.Println("table admin created")
+}
+
+func Create_Photos_Tables() {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	sts := `
+DROP TABLE IF EXISTS photos;
+CREATE TABLE photos(id INTEGER PRIMARY KEY, email TEXT, date TEXT, photo TEXT);
+`
+	_, err = db.Exec(sts)
+
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	log.Println("table admin created")
+}
+
 func Create_Admin_Tables() {
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
