@@ -50,8 +50,11 @@ func CountzHandler(c echo.Context) error {
 	r.revsjailed = rjailedc
 	r.revsrejected = rrejectc
 
+	fmt.Println(r)
+
 	return c.JSON(http.StatusOK, r)
 }
+
 func video_count() string {
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
