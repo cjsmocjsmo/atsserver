@@ -98,7 +98,6 @@ func video_count() string {
 		fmt.Printf("Counted %s videos\n", video_count)
 		return video_count
 	}
-	return video_count
 }
 
 func photos_count() string {
@@ -132,12 +131,14 @@ func photos_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No photos found.")
+		return photos_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return photos_count
 	default:
 		fmt.Printf("Counted %s photos\n", photos_count)
+		return photos_count
 	}
-	return photos_count
 }
 
 func admin_count() string {
@@ -171,12 +172,14 @@ func admin_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No admin found.")
+		return admin_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return admin_count
 	default:
 		fmt.Printf("Counted %s admin\n", admin_count)
+		return admin_count
 	}
-	return admin_count
 }
 
 func estimates_count() string {
@@ -210,12 +213,14 @@ func estimates_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No estimates found.")
+		return estimates_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return estimates_count
 	default:
 		fmt.Printf("Counted %s estimates\n", estimates_count)
+		return estimates_count
 	}
-	return estimates_count
 }
 
 func est_completed_count() string {
@@ -249,12 +254,14 @@ func est_completed_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No est_completed found.")
+		return est_completed_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return est_completed_count
 	default:
 		fmt.Printf("Counted %s est_completed\n", est_completed_count)
+		return est_completed_count
 	}
-	return est_completed_count
 }
 
 func est_working_count() string {
@@ -288,12 +295,14 @@ func est_working_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No est_working found.")
+		return est_working_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return est_working_count
 	default:
 		fmt.Printf("Counted %s est_working\n", est_working_count)
+		return est_working_count
 	}
-	return est_working_count
 }
 
 func reviews_count() string {
@@ -327,12 +336,14 @@ func reviews_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No reviews found.")
+		return reviews_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return reviews_count
 	default:
 		fmt.Printf("Counted %s reviews\n", reviews_count)
+		return reviews_count
 	}
-	return reviews_count
 }
 
 func revs_accepted_count() string {
@@ -366,12 +377,14 @@ func revs_accepted_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No revs_accepted found.")
+		return revs_accepted_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return revs_accepted_count
 	default:
 		fmt.Printf("Counted %s revs_accepted\n", revs_accepted_count)
+		return revs_accepted_count
 	}
-	return revs_accepted_count
 }
 
 func revs_rejected_count() string {
@@ -405,12 +418,14 @@ func revs_rejected_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No revs_rejected found.")
+		return revs_rejected_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return revs_rejected_count
 	default:
 		fmt.Printf("Counted %s revs_rejected\n", revs_rejected_count)
+		return revs_rejected_count
 	}
-	return revs_rejected_count
 }
 
 func revs_jailed_count() string {
@@ -444,10 +459,12 @@ func revs_jailed_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No revs_jailed found.")
+		return revs_jailed_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return revs_jailed_count
 	default:
 		fmt.Printf("Counted %s revs_jailed\n", revs_jailed_count)
+		return revs_jailed_count
 	}
-	return revs_jailed_count
 }
