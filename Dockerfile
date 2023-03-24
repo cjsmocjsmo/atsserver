@@ -22,7 +22,7 @@ FROM debian:bookworm-slim
 RUN \
     apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get -y install sqlite3 && \
+    apt-get -y install sqlite3 tail nano && \
     apt-get -y autoclean && \
     apt-get -y autoremove
 RUN \
