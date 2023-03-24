@@ -27,32 +27,36 @@ type CountsS struct {
 }
 
 func CountzHandler(c echo.Context) error {
-	vc := video_count()
-	pc := photos_count()
-	ac := admin_count()
-	ec := estimates_count()
-	ecompc := est_completed_count()
-	eworkc := est_working_count()
-	rc := reviews_count()
-	racceptc := revs_accepted_count()
-	rjailedc := revs_jailed_count()
-	rrejectc := revs_rejected_count()
+	// vc := video_count()
+	// pc := photos_count()
+	// ac := admin_count()
+	// ec := estimates_count()
+	// ecompc := est_completed_count()
+	// eworkc := est_working_count()
+	// rc := reviews_count()
+	// racceptc := revs_accepted_count()
+	// rjailedc := revs_jailed_count()
+	// rrejectc := revs_rejected_count()
+
+	result := []CountsS{}
 
 	r := CountsS{}
-	r.vids = vc
-	r.photos = pc
-	r.admin = ac
-	r.estimates = ec
-	r.esticompleted = ecompc
-	r.estiworking = eworkc
-	r.revs = rc
-	r.revsaccepted = racceptc
-	r.revsjailed = rjailedc
-	r.revsrejected = rrejectc
+	r.vids = video_count()
+	r.photos = photos_count()
+	r.admin = admin_count()
+	r.estimates = estimates_count()
+	r.esticompleted = est_completed_count()
+	r.estiworking = est_working_count()
+	r.revs = reviews_count()
+	r.revsaccepted = revs_accepted_count()
+	r.revsjailed = revs_jailed_count()
+	r.revsrejected = revs_rejected_count()
+
+	result = append(result, r)
 
 	fmt.Println(r)
 
-	return c.JSON(http.StatusOK, r)
+	return c.JSON(http.StatusOK, result)
 }
 
 func video_count() string {
@@ -86,10 +90,13 @@ func video_count() string {
 	switch {
 	case err == sql.ErrNoRows:
 		fmt.Printf("No videos found.")
+		return video_count
 	case err != nil:
 		fmt.Printf("%s", err)
+		return video_count
 	default:
 		fmt.Printf("Counted %s videos\n", video_count)
+		return video_count
 	}
 	return video_count
 }
