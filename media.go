@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"database/sql"
 	"encoding/base64"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"io"
 	"log"
+	//"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -31,11 +31,11 @@ func UploadHander(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(email)
-	fmt.Println(file.Filename)
+	log.Println(email)
+	log.Println(file.Filename)
 
 	ext := filepath.Ext(file.Filename)
-	fmt.Println(ext)
+	log.Println(ext)
 	extlist := []string{".jpeg", "jpg", "png", "webp", "avif"}
 	if contains(extlist, ext) {
 
@@ -135,7 +135,7 @@ func UploadHander(c echo.Context) error {
 		if err != nil {
 			log.Println(err)
 		}
-		fmt.Println(dst)
+		log.Println(dst)
 		log.Println(dst)
 
 		res, err := db.Exec("INSERT INTO photos VALUES(?,?,?,?)", &nid, &email, &ndate, &dst)
