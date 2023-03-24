@@ -4,6 +4,7 @@ RUN mkdir /go/src/atserver
 WORKDIR /go/src/atserver
 
 COPY admin.go .
+COPY db_count.go .
 COPY estimates.go .
 COPY go.mod .
 COPY go.sum .

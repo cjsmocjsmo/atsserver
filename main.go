@@ -37,7 +37,9 @@ func main() {
 	e.GET("/estbup", EstimatesGzipHandler)
 
 	e.POST("/upload", UploadHander)
-	e.GET("/getphoto", GetPhotoByEmailHandler)
+	e.GET("/getphotobyemail", GetPhotoByEmailHandler)
+
+	e.GET("/counts", CountzHandler)
 
 	e.File("/dbbackup", "static/dbbackup.tar.gz") // testing
 	e.File("/revbackup", "static/rev_db.tar.gz")
