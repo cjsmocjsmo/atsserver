@@ -25,12 +25,15 @@ func contains(s []string, str string) bool {
 	return false
 }
 
-func UploadHander(c echo.Context) error {
+func UploadHandler(c echo.Context) error {
+	log.Println("Starting UploadHandler")
+	rawstr := c.QueryString()
 	email := c.FormValue("estiemail")
 	file, err := c.FormFile("estiphoto")
 	if err != nil {
 		log.Println(err)
 	}
+	log.Println(rawstr)
 	log.Println(email)
 	log.Println(file.Filename)
 

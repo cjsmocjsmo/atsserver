@@ -38,7 +38,7 @@ func main() {
 	e.GET("/revbup", ReviewsGzipHandler)
 	e.GET("/estbup", EstimatesGzipHandler)
 
-	e.POST("/upload", UploadHander)
+	e.POST("/upload", UploadHandler)
 	e.GET("/getphotobyemail", GetPhotoByEmailHandler)
 
 	e.GET("/counts", CountzHandler)
