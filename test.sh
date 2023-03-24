@@ -32,3 +32,5 @@ echo "\tshould be a "Backup Created"\n"
 echo "Esc Backup Test";
 curl ${addr}/estbup;
 echo "\tshould be a "Backup Created"\n"
+
+curl http://192.168.0.91:8080/upload -F estiemail=foo@gmail.com -F estiphoto=@/home/charliepi/Downloads/debian.jpg
