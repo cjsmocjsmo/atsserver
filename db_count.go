@@ -13,27 +13,46 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// type CountsS struct {
-// 	vidcount             int
-// 	photoscount          int
-// 	admincount           int
-// 	estimatescount       int
-// 	estiworkingcount     int
-// 	esticompletedcount   int
-// 	reviewscount         int
-// 	reviewsjailedcount   int
-// 	reviewsacceptedcount int
-// 	reviewsrejectedcount int
-// }
+type CountsS struct {
+	vids          string
+	photos        string
+	admin         string
+	estimates     string
+	esticompleted string
+	estiworking   string
+	revs          string
+	revsaccepted  string
+	revsjailed    string
+	revsrejected  string
+}
 
 func CountzHandler(c echo.Context) error {
-	video_count()
-	photos_count()
-	reviews_count()
+	vc := video_count()
+	pc := photos_count()
+	ac := admin_count()
+	ec := estimates_count()
+	ecompc := est_completed_count()
+	eworkc := est_working_count()
+	rc := reviews_count()
+	racceptc := revs_accepted_count()
+	rjailedc := revs_jailed_count()
+	rrejectc := revs_rejected_count()
 
-	return c.JSON(http.StatusOK, "Count Complete.")
+	r := CountsS{}
+	r.vids = vc
+	r.photos = pc
+	r.admin = ac
+	r.estimates = ec
+	r.esticompleted = ecompc
+	r.estiworking = eworkc
+	r.revs = rc
+	r.revsaccepted = racceptc
+	r.revsjailed = rjailedc
+	r.revsrejected = rrejectc
+
+	return c.JSON(http.StatusOK, r)
 }
-func video_count() {
+func video_count() string {
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -69,9 +88,10 @@ func video_count() {
 	default:
 		fmt.Printf("Counted %s videos\n", video_count)
 	}
+	return video_count
 }
 
-func photos_count() {
+func photos_count() string {
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -107,33 +127,166 @@ func photos_count() {
 	default:
 		fmt.Printf("Counted %s photos\n", photos_count)
 	}
+	return photos_count
 }
 
-// admin_count, err := db.Query("SELECT count(*) FROM admin")
-// if err != nil {
-// 	log.Println("admin_count has failed")
-// 	log.Fatal(err)
-// }
+func admin_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
 
-// estimates_count, err := db.Query("SELECT count(*) FROM estimates")
-// if err != nil {
-// 	log.Println("estimates_count has failed")
-// 	log.Fatal(err)
-// }
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
 
-// est_completed_count, err := db.Query("SELECT count(*) FROM est_completed")
-// if err != nil {
-// 	log.Println("est_completed_count has failed")
-// 	log.Fatal(err)
-// }
+	defer db.Close()
 
-// est_working_count, err := db.Query("SELECT count(*) FROM est_working")
-// if err != nil {
-// 	log.Println("est_working_count has failed")
-// 	log.Fatal(err)
-// }
+	var admin_count string
 
-func reviews_count() {
+	query, err := db.Prepare("SELECT count(*) FROM admin")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&admin_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No admin found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s admin\n", admin_count)
+	}
+	return admin_count
+}
+
+func estimates_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	var estimates_count string
+
+	query, err := db.Prepare("SELECT count(*) FROM estimates")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&estimates_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No estimates found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s estimates\n", estimates_count)
+	}
+	return estimates_count
+}
+
+func est_completed_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	var est_completed_count string
+
+	query, err := db.Prepare("SELECT count(*) FROM est_completed")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&est_completed_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No est_completed found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s est_completed\n", est_completed_count)
+	}
+	return est_completed_count
+}
+
+func est_working_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	var est_working_count string
+
+	query, err := db.Prepare("SELECT count(*) FROM est_working")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&est_working_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No est_working found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s est_working\n", est_working_count)
+	}
+	return est_working_count
+}
+
+func reviews_count() string {
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -169,25 +322,122 @@ func reviews_count() {
 	default:
 		fmt.Printf("Counted %s reviews\n", reviews_count)
 	}
+	return reviews_count
 }
 
-// revs_accepted_count, err := db.Query("SELECT count(*) FROM revs_accepted")
-// if err != nil {
-// 	log.Println("revs_accepted_count has failed")
-// 	log.Fatal(err)
-// }
+func revs_accepted_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
 
-// revs_rejected_count, err := db.Query("SELECT count(*) FROM revs_rejected")
-// if err != nil {
-// 	log.Println("revs_rejected_count has failed")
-// 	log.Fatal(err)
-// }
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
 
-// revs_jailed_count, err := db.Query("SELECT count(*) FROM revs_jailed")
-// if err != nil {
-// 	log.Println("revs_jailed_count has failed")
-// 	log.Fatal(err)
-// }
+	defer db.Close()
 
-// SELECT COUNT(*) FROM t1;
-// return c.JSON(http.StatusOK, "fuckit")
+	var revs_accepted_count string
+
+	query, err := db.Prepare("SELECT count(*) FROM revs_accepted")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&revs_accepted_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No revs_accepted found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s revs_accepted\n", revs_accepted_count)
+	}
+	return revs_accepted_count
+}
+
+func revs_rejected_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	var revs_rejected_count string
+
+	query, err := db.Prepare("SELECT count(*) FROM revs_rejected")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&revs_rejected_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No revs_rejected found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s revs_rejected\n", revs_rejected_count)
+	}
+	return revs_rejected_count
+}
+
+func revs_jailed_count() string {
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "./atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file) // production
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	var revs_jailed_count string
+
+	query, err := db.Prepare("SELECT count(*) FROM revs_jailed")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	err = query.QueryRow().Scan(&revs_jailed_count)
+
+	switch {
+	case err == sql.ErrNoRows:
+		fmt.Printf("No revs_jailed found.")
+	case err != nil:
+		fmt.Printf("%s", err)
+	default:
+		fmt.Printf("Counted %s revs_jailed\n", revs_jailed_count)
+	}
+	return revs_jailed_count
+}
