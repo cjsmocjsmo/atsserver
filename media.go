@@ -31,8 +31,11 @@ func UploadHander(c echo.Context) error {
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println(email)
+	fmt.Println(file.Filename)
 
 	ext := filepath.Ext(file.Filename)
+	fmt.Println(ext)
 	extlist := []string{".jpeg", "jpg", "png", "webp", "avif"}
 	if contains(extlist, ext) {
 
