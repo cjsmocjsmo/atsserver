@@ -99,65 +99,63 @@ func UploadHandler(c echo.Context) error {
 		} else {
 			ret_val = 0
 		}
-
+		return c.JSON(http.StatusOK, ret_val)
 		//tranform to base64 and put in db in new table
 
+	} else {
+		//this is probably a video file
+		src, err := file.Open()
+		if err != nil {
+			log.Println(err)
+		}
+		defer src.Close()
+
+		dst, err := os.Create(file.Filename) // may need temp folder
+		if err != nil {
+			log.Println(err)
+		}
+		defer dst.Close()
+
+		// Copy
+		if _, err = io.Copy(dst, src); err != nil {
+			log.Println(err)
+		}
+		rawdate := time.Now()
+		ndate := rawdate.Format("01-13-2022")
+
+		nid := UUID()
+
+		var db_file string
+		_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+		if boo {
+			db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+		} else {
+			db_file = "atsinfo.db"
+		}
+
+		db, err := sql.Open("sqlite3", db_file)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println(dst)
+		log.Println(dst)
+
+		res, err := db.Exec("INSERT INTO photos VALUES(?,?,?,?)", &nid, &email, &ndate, &dst)
+		if err != nil {
+			log.Println(err)
+			log.Println("photo insert has failed")
+		}
+		var ret_val int
+		_, err = res.LastInsertId()
+		if err != nil {
+			log.Println(err)
+			ret_val = 1
+		} else {
+			ret_val = 0
+		}
+
+		return c.JSON(http.StatusOK, ret_val)
 	}
-	return c.JSON(http.StatusOK, ret_val)
-	// else {
-	// 	//this is probably a video file
-	// 	src, err := file.Open()
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 	}
-	// 	defer src.Close()
-
-	// 	dst, err := os.Create(file.Filename) // may need temp folder
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 	}
-	// 	defer dst.Close()
-
-	// 	// Copy
-	// 	if _, err = io.Copy(dst, src); err != nil {
-	// 		log.Println(err)
-	// 	}
-	// 	rawdate := time.Now()
-	// 	ndate := rawdate.Format("01-13-2022")
-
-	// 	nid := UUID()
-
-	// 	var db_file string
-	// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-	// 	if boo {
-	// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-	// 	} else {
-	// 		db_file = "atsinfo.db"
-	// 	}
-
-	// 	db, err := sql.Open("sqlite3", db_file)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 	}
-	// 	log.Println(dst)
-	// 	log.Println(dst)
-
-	// 	res, err := db.Exec("INSERT INTO photos VALUES(?,?,?,?)", &nid, &email, &ndate, &dst)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		log.Println("photo insert has failed")
-	// 	}
-	// 	var ret_val int
-	// 	_, err = res.LastInsertId()
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		ret_val = 1
-	// 	} else {
-	// 		ret_val = 0
-	// 	}
-
-	// 	return c.JSON(http.StatusOK, ret_val)
-	// }
 }
 
 func GetPhotoByEmailHandler(c echo.Context) error {

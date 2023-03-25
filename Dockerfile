@@ -50,17 +50,16 @@ WORKDIR /usr/share/ats_server
 
 COPY --from=builder /go/src/atserver/main .
 
+WORKDIR /usr/share/ats_server/users
+
+COPY user1.yaml .
+COPY user2.yaml .
+
 WORKDIR /use/share/ats_server/static
 
 COPY static/dbbackup.tar.gz .
 COPY static/est_db.tar.gz .
 COPY static/rev_db.tar.gz .
-
-WORKDIR /usr/share/ats_server/users
-
-COPY user1.yaml .
-
-COPY user2.yaml .
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
