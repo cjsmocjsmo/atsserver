@@ -48,5 +48,6 @@ func main() {
 	e.File("/estbackup", "static/est_db.tar.gz")
 
 	e.Static("/static", "static") // production for backup.tar.gz
-	e.Logger.Fatal(e.Start(":8080"))
+	// e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":80"))
 }
