@@ -31,10 +31,8 @@ DROP TABLE IF EXISTS photos;
 CREATE TABLE photos(id INTEGER PRIMARY KEY, email TEXT, date TEXT, photo TEXT);
 DROP TABLE IF EXISTS admin;
 CREATE TABLE admin(id INTEGER PRIMARY KEY, name TEXT, email TEXT, date TEXT, time TEXT, token TEXT, password TEXT);
-
 DROP TABLE IF EXISTS loggedin;
-CREATE TABLE loggedin(id INTERGER PRIMARY KEY, email TEXT)
-
+CREATE TABLE loggedin(id INTERGER PRIMARY KEY, email TEXT);
 DROP TABLE IF EXISTS estimates;
 CREATE TABLE estimates(id INTEGER PRIMARY KEY, name TEXT, address TEXT, city TEXT, telephone TEXT, email TEXT, reqservdate TEXT, date TEXT, time TEXT, comment TEXT);
 DROP TABLE IF EXISTS est_completed;
