@@ -9,14 +9,8 @@ func main() {
 
 	ATS_Logging()
 	Create_ALL_Tables()
-	// Create_Admin_Tables()
 	Create_Admin()
-	// Create_Reviews_Tables()
 	Insert_All_Initial_Comments()
-	// Insert_Initial_Comments()
-	// Create_Estimate_Tables()
-	// Create_Photos_Tables()
-	// Create_Videos_Tables()
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

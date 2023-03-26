@@ -95,6 +95,45 @@ func Insert_Admins(x UserS) int {
 	return ret_val
 }
 
+func insert_loggedin(email string) int {
+
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db" // production
+
+	} else {
+		db_file = "atsinfo.db" //testing
+	}
+
+	db, err := sql.Open("sqlite3", db_file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	id := UUID()
+	// newemail := strings.Replace(x.Email, "AT", "@", 1)
+	// nemail := strings.ReplaceAll(newemail, "DOT", ".")
+	// ndate := strings.ReplaceAll(x.Date, "_", "-")
+
+	res, err := db.Exec("INSERT INTO admin VALUES(?,?)", id, email)
+	if err != nil {
+		log.Println("admin insert has failed")
+	}
+	var ret_val int
+	_, err = res.LastInsertId()
+	if err != nil {
+		log.Printf("this is last insert id err %v", err)
+		ret_val = 1
+	} else {
+		ret_val = 0
+	}
+	log.Printf("insert admin return val %v", ret_val)
+	return ret_val
+}
+
 func Create_Admin() {
 	alist := parse_admin_list()
 	for _, admin := range alist {
@@ -125,7 +164,7 @@ func get_admin_by_email(x string) map[string]string {
 		db_file = "atsinfo.db"
 	}
 
-	db, err := sql.Open("sqlite3", db_file) //production
+	db, err := sql.Open("sqlite3", db_file)
 
 	if err != nil {
 		log.Fatal((err))
@@ -188,6 +227,7 @@ func LoginHandler(c echo.Context) error {
 
 	isLoggedIn := false
 	if comp1 && comp2 && comp3 {
+		insert_loggedin(e)
 		isLoggedIn = true
 	}
 
@@ -195,6 +235,36 @@ func LoginHandler(c echo.Context) error {
 }
 
 func LogoutHandler(c echo.Context) error {
+	// rawstr := c.QueryString()
+	// parts := strings.Split(rawstr, "=")
+	// email := parts[1]
 
-	return c.JSON(http.StatusOK, "logoutHandler")
+	log.Println("Starting LogoutHandler")
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db" //production
+	} else {
+		db_file = "atsinfo.db"
+	}
+
+	db, err := sql.Open("sqlite3", db_file)
+
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	defer db.Close()
+
+	rm_id := c.QueryParam("email")
+	ret_val := 0
+
+	_, err2 := db.Exec("DELETE FROM loggedin WHERE id=?)", &rm_id)
+	if err2 != nil {
+		log.Println(err2)
+		log.Println("revs_jailed deletion has failed")
+		ret_val = 1
+	}
+
+	return c.JSON(http.StatusOK, ret_val)
 }
