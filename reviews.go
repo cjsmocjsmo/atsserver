@@ -380,7 +380,7 @@ func get_jailed_reviews() []map[string]string {
 func GetJailedReviewsHandler(c echo.Context) error {
 	log.Println("GetJailedReviews has started")
 	reviewz := []map[string]string{}
-	jailedrevs := get_accepted_reviews()
+	jailedrevs := get_jailed_reviews()
 	if len(jailedrevs) == 0 {
 		return c.JSON(http.StatusOK, "0")
 	}
