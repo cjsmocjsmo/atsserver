@@ -1,6 +1,6 @@
 #!/bin/sh
-# addr="http://192.168.0.91:8080"
-addr="https://atsdo.xyz"
+addr="http://192.168.0.91:8080"
+# addr="https://atsdo.xyz"
 
 echo "\nLogin Test";
 curl ${addr}/login?entry=atsadmin2_porthose.cjsmo.cjsmo@gmail.com_porthose;

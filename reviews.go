@@ -33,67 +33,98 @@ func ATS_Logging() {
 	log.Println("ATS logging started")
 }
 
-func Insert_Comment_One() {
-	var db_file string
-	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-	if boo {
-		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-	} else {
-		db_file = "atsinfo.db" //testing
-	}
+// func Insert_Comment_One() {
+// 	var db_file string
+// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+// 	if boo {
+// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+// 	} else {
+// 		db_file = "atsinfo.db" //testing
+// 	}
 
-	db, err := sql.Open("sqlite3", db_file) // production
+// 	db, err := sql.Open("sqlite3", db_file) // production
 
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	defer db.Close()
+// 	defer db.Close()
 
-	rev1 := `
-INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('1', 'Scott Mason', 'smason@gmail.com', '2023-03-15', '04PM',
-'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled.  Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them to anyone looking to get problem trees down safely.', '5');
-INSERT INTO revs_accepted(id, revid) VALUES('1', '1');
-`
-	_, err = db.Exec(rev1)
+// 	rev1 := `
+// INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('1', 'Scott Mason', 'smason@gmail.com', '2023-03-15', '04PM',
+// 'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled.  Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them to anyone looking to get problem trees down safely.', '5');
+// INSERT INTO revs_accepted(id, revid) VALUES('1', '1');
+// `
+// 	_, err = db.Exec(rev1)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	log.Println("insert review 001 complete")
-}
+// 	log.Println("insert review 001 complete")
+// }
 
-func Insert_comment_two() {
-	var db_file string
-	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-	if boo {
-		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-	} else {
-		db_file = "atsinfo.db" //testing
-	}
+// func Insert_comment_two() {
+// 	var db_file string
+// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+// 	if boo {
+// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+// 	} else {
+// 		db_file = "atsinfo.db" //testing
+// 	}
 
-	db, err := sql.Open("sqlite3", db_file) //testing
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	db, err := sql.Open("sqlite3", db_file) //testing
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	defer db.Close()
-	rev2 := `
-INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('2', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15', '11am',
-'I contacted Curtis about removing several, dangerous trees on my property.  He showed up on time and ready to work. He did exactly what I expected him to do. He does exceptional work. I will continue to call Curtis when I need a tree removed. I would highly recommend AlphaTree.', '5');
-INSERT INTO revs_accepted(id, revid) VALUES('2', '2');
-`
-	_, err = db.Exec(rev2)
+// 	defer db.Close()
+// 	rev2 := `
+// INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('2', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15', '11am',
+// 'I contacted Curtis about removing several, dangerous trees on my property.  He showed up on time and ready to work. He did exactly what I expected him to do. He does exceptional work. I will continue to call Curtis when I need a tree removed. I would highly recommend AlphaTree.', '5');
+// INSERT INTO revs_accepted(id, revid) VALUES('2', '2');
+// `
+// 	_, err = db.Exec(rev2)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	log.Println("insert review 002 complete")
-}
+// 	log.Println("insert review 002 complete")
+// }
 
-func Insert_comment_three() {
+// func Insert_comment_three() {
+// 	var db_file string
+// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+// 	if boo {
+// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+// 	} else {
+// 		db_file = "atsinfo.db"
+// 	}
+
+// 	db, err := sql.Open("sqlite3", db_file) // production
+
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	defer db.Close()
+
+// 	rev3 := `
+// INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('3', 'Kurt R', 'KurtR@gmail.com', '2023-03-15', '01PM',
+// 'Curtis and crew took down an 80 foot fir near a fence and house. NO DAMAGE!!! Cleanup was thorough and they cut the rounds into 14 inch rounds for later splitting. Crew had a great attitude. Will use them again.', '5');
+// INSERT INTO revs_accepted(id, revid) VALUES('3', '3');
+// `
+// 	_, err = db.Exec(rev3)
+
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	log.Println("insert review 003 complete")
+// }
+
+func Insert_All_Initial_Comments() {
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -110,12 +141,18 @@ func Insert_comment_three() {
 
 	defer db.Close()
 
-	rev3 := `
+	rev := `
+INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('1', 'Scott Mason', 'smason@gmail.com', '2023-03-15', '04PM',
+'Very responsive and easy to communicate with. Curtis and crew showed up when scheduled.  Very knowledgeable and professional. Mike did a great job in the tree and zip lined the branches perfectly with Curtis directing. Although he did get bit by the large thorns in the Locust tree. Would definitely recommend them to anyone looking to get problem trees down safely.', '5');
+INSERT INTO revs_accepted(id, revid) VALUES('1', '1');
+INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('2', 'Dan do1058', 'Dando1058@gmail.com', '2023-03-15', '11am',
+'I contacted Curtis about removing several, dangerous trees on my property.  He showed up on time and ready to work. He did exactly what I expected him to do. He does exceptional work. I will continue to call Curtis when I need a tree removed. I would highly recommend AlphaTree.', '5');
+INSERT INTO revs_accepted(id, revid) VALUES('2', '2');
 INSERT INTO reviews (id, name, email, date, time, review, rating) VALUES('3', 'Kurt R', 'KurtR@gmail.com', '2023-03-15', '01PM',
 'Curtis and crew took down an 80 foot fir near a fence and house. NO DAMAGE!!! Cleanup was thorough and they cut the rounds into 14 inch rounds for later splitting. Crew had a great attitude. Will use them again.', '5');
 INSERT INTO revs_accepted(id, revid) VALUES('3', '3');
 `
-	_, err = db.Exec(rev3)
+	_, err = db.Exec(rev)
 
 	if err != nil {
 		log.Fatal(err)
@@ -124,6 +161,13 @@ INSERT INTO revs_accepted(id, revid) VALUES('3', '3');
 	log.Println("insert review 003 complete")
 }
 
+// func Insert_Initial_Comments() {
+
+// 	Insert_Comment_One()
+// 	Insert_comment_two()
+// 	Insert_comment_three()
+// }
+
 func UUID() string {
 	aseed := time.Now()
 	aSeed := aseed.UnixNano()
@@ -131,13 +175,6 @@ func UUID() string {
 	u := rand.Int63n(aSeed)
 	uuid := strconv.FormatInt(u, 10)
 	return uuid
-}
-
-func Insert_Initial_Comments() {
-
-	Insert_Comment_One()
-	Insert_comment_two()
-	Insert_comment_three()
 }
 
 func TestHandler(c echo.Context) error {
