@@ -30,6 +30,7 @@ func main() {
 	e.GET("/all_revs", GetAllReviewsHandler)
 	e.GET("/rev_accept", AcceptReviewHandler)
 	e.GET("/rev_reject", RejectReviewHandler)
+	e.GET("/all_jailed", GetJailedReviewsHandler)
 
 	e.GET("/ins_est", InsertEstimateHandler)
 	e.GET("/all_est", GetAllEstimatesHandler)

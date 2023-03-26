@@ -332,6 +332,115 @@ func GetAllReviewsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, reviewz)
 }
 
+func get_jailed_reviews() []map[string]string {
+	log.Println("starting GetAllReviewsHandler")
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "atsinfo.db"
+	}
+
+	db, err := sql.Open("sqlite3", db_file) //production
+
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM revs_jailed")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	var jailed []map[string]string
+
+	for rows.Next() {
+		revv := map[string]string{}
+		var id string
+		var revid string
+
+		err = rows.Scan(&id, &revid)
+		if err != nil {
+			log.Println(err)
+		}
+
+		revv["id"] = id
+		revv["revid"] = revid
+		jailed = append(jailed, revv)
+	}
+
+	return jailed
+}
+
+func GetJailedReviewsHandler(c echo.Context) error {
+	log.Println("GetJailedReviews has started")
+	reviewz := []map[string]string{}
+	jailedrevs := get_accepted_reviews()
+	if len(jailedrevs) == 0 {
+		return c.JSON(http.StatusOK, "0")
+	}
+
+	for _, arev := range jailedrevs {
+		log.Println("starting GetJailedReviewsHandler")
+		var db_file string
+		_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+		if boo {
+			db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+		} else {
+			db_file = "atsinfo.db"
+		}
+
+		db, err := sql.Open("sqlite3", db_file) //production
+
+		if err != nil {
+			log.Fatal((err))
+		}
+
+		defer db.Close()
+
+		rows, err := db.Query("SELECT * FROM reviews WHERE id=?", arev["revid"])
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			frev := map[string]string{}
+			var id string
+			var name string
+			var email string
+			var date string
+			var time string
+			var review string
+			var rating string
+
+			err = rows.Scan(&id, &name, &email, &date, &time, &review, &rating)
+			if err != nil {
+				log.Println(err)
+			}
+
+			frev["id"] = id
+			frev["name"] = name
+			frev["email"] = email
+			frev["date"] = date
+			frev["time"] = time
+			frev["review"] = review
+			frev["rating"] = rating
+			reviewz = append(reviewz, frev)
+
+		}
+
+		log.Println("GetJailedReviews is complete")
+
+	}
+	return c.JSON(http.StatusOK, reviewz)
+}
+
 func ReviewsGzipHandler(c echo.Context) error {
 	log.Println("starting GetAllReviewsHandler")
 	var db_file string
