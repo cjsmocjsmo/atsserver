@@ -259,7 +259,7 @@ func LogoutHandler(c echo.Context) error {
 	rm_id := c.QueryParam("email")
 	ret_val := 0
 
-	_, err2 := db.Exec("DELETE FROM loggedin WHERE id=?)", &rm_id)
+	_, err2 := db.Exec("DELETE FROM loggedin WHERE email=?)", &rm_id)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("revs_jailed deletion has failed")
