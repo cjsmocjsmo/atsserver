@@ -46,5 +46,5 @@ func main() {
 
 	e.Static("/static", "static") // production for backup.tar.gz
 	// e.Logger.Fatal(e.Start(":8080")) //testing
-	e.Logger.Fatal(e.Start(":80")) //production
+	e.Logger.Fatal(e.Start(":8080")) //production
 }
