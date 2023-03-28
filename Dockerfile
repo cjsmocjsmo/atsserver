@@ -25,15 +25,14 @@ RUN \
     apt-get -y install sqlite3 && \
     apt-get -y autoclean && \
     apt-get -y autoremove
+
 RUN \
     mkdir /usr/share/ats_server && \
     chmod -R +rwx /usr/share/ats_server
 
-RUN \
-    touch /usr/share/ats_server/ATS.log
+RUN touch /usr/share/ats_server/ATS.log
 
-RUN \
-    mkdir /usr/share/ats_server/static
+RUN mkdir /usr/share/ats_server/static
 
 RUN \
     mkdir /usr/share/ats_server/users && \
@@ -46,6 +45,7 @@ COPY --from=builder /go/src/atserver/main .
 WORKDIR /usr/share/ats_server/users
 
 COPY user1.yaml .
+
 COPY user2.yaml .
 
 WORKDIR /use/share/ats_server/static

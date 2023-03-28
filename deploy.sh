@@ -1,8 +1,9 @@
 #!/bin/sh
 
-VERSION="atsserver:0.0.3";
+VERSION="gcr.io/atsgo-340504/atsserver:0.0.7";
 
 git pull && \
 docker build -t $VERSION . && \
-docker run -p 8080:8080 $VERSION;
+docker push $VERSION
+# docker run -p 8080:8080 $VERSION;
 # docker run -d -p 8080:8080 $VERSION;

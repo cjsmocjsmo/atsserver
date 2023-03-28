@@ -118,7 +118,7 @@ func insert_loggedin(email string) int {
 	// nemail := strings.ReplaceAll(newemail, "DOT", ".")
 	// ndate := strings.ReplaceAll(x.Date, "_", "-")
 
-	res, err := db.Exec("INSERT INTO admin VALUES(?,?)", id, email)
+	res, err := db.Exec("INSERT INTO loggedin VALUES(?,?)", id, email)
 	if err != nil {
 		log.Println("admin insert has failed")
 	}
