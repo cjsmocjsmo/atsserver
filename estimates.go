@@ -145,6 +145,32 @@ func GetAllEstimatesHandler(c echo.Context) error {
 	est_map := []map[string]string{}
 
 	for _, estid := range estworking {
+		rows, err = db.Query("SELECT * FROM photos WHERE email=?", estid)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var photomap []map[string]string
+
+		for rows.Next() {
+			photoinfo := map[string]string{}
+			var id string
+			var email string
+			var date string
+			var photo string
+			// id INTEGER PRIMARY KEY, email TEXT, date TEXT, photo TEXT
+			err = rows.Scan(&id, &email, &date, &photo)
+			if err != nil {
+				log.Println(err)
+			}
+
+			photoinfo["id"] = id
+			photoinfo["email"] = email
+			photoinfo["date"] = date
+			photoinfo["photo"] = photo
+
+			photomap = append(photomap, photoinfo)
+		}
 		rows, err := db.Query("SELECT * FROM estimates WHERE id=?", estid)
 		if err != nil {
 			log.Fatal(err)
@@ -178,6 +204,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 			est["date"] = date
 			est["time"] = time
 			est["comment"] = comment
+			est["photo"] = photomap[0]["photo"]
 			est_map = append(est_map, est)
 		}
 	}
