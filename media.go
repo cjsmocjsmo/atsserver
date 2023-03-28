@@ -64,8 +64,8 @@ func UploadHandler(c echo.Context) error {
 		content, _ := io.ReadAll(reader)
 		encoded := base64.StdEncoding.EncodeToString(content)
 		newimagestring := "data:image/jpeg;base64," + encoded
-
-		log.Println("Starting InsertReview")
+		log.Println(newimagestring)
+		log.Println("Starting image insert")
 		var db_file string
 		_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 		if boo {
@@ -162,9 +162,9 @@ func GetPhotoByEmailHandler(c echo.Context) error {
 
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "=")
-	email := parts[1]
+	Email := parts[1]
 
-	log.Println("starting GetAllReviewsHandler")
+	log.Println("starting GetPhotoByEmailHandler")
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -181,7 +181,7 @@ func GetPhotoByEmailHandler(c echo.Context) error {
 
 	defer db.Close()
 
-	rows, err := db.Query("SELECT * FROM photos WHERE email=?", email)
+	rows, err := db.Query("SELECT * FROM photos WHERE email=?", Email)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -194,15 +194,17 @@ func GetPhotoByEmailHandler(c echo.Context) error {
 		photoinfo := map[string]string{}
 		var id string
 		var email string
+		var date string
 		var photo string
-
-		err = rows.Scan(&id, &email, &photo)
+		// id INTEGER PRIMARY KEY, email TEXT, date TEXT, photo TEXT
+		err = rows.Scan(&id, &email, &date, &photo)
 		if err != nil {
 			log.Println(err)
 		}
 
 		photoinfo["id"] = id
 		photoinfo["email"] = email
+		photoinfo["date"] = date
 		photoinfo["photo"] = photo
 
 		photomap = append(photomap, photoinfo)
