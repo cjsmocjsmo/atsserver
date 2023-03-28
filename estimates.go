@@ -141,6 +141,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 		}
 		estworking = append(estworking, estid)
 	}
+	log.Println(estworking)
 
 	est_map := []map[string]string{}
 
@@ -171,6 +172,8 @@ func GetAllEstimatesHandler(c echo.Context) error {
 
 			photomap = append(photomap, photoinfo)
 		}
+		log.Println(photomap)
+
 		rows, err := db.Query("SELECT * FROM estimates WHERE id=?", estid)
 		if err != nil {
 			log.Fatal(err)
