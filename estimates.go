@@ -141,7 +141,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 		}
 		estworking = append(estworking, estid)
 	}
-	log.Println(estworking)
+	log.Printf("this is est working %v", estworking)
 
 	est_map := []map[string]string{}
 
@@ -152,7 +152,9 @@ func GetAllEstimatesHandler(c echo.Context) error {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		defer rows.Close()
+
 		for rows.Next() {
 			est := map[string]string{}
 			var id string
@@ -171,6 +173,8 @@ func GetAllEstimatesHandler(c echo.Context) error {
 				log.Println(err)
 			}
 
+			defer rows.Close()
+
 			est["id"] = id
 			est["name"] = name
 			est["address"] = address
@@ -182,10 +186,14 @@ func GetAllEstimatesHandler(c echo.Context) error {
 			est["time"] = time
 			est["comment"] = comment
 
+			log.Printf("this is email %v", email)
+
 			rows, err = db.Query("SELECT * FROM photos WHERE email=?", email)
 			if err != nil {
 				log.Fatal(err)
 			}
+
+			defer rows.Close()
 
 			var photomap []map[string]string
 
@@ -208,7 +216,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 
 				photomap = append(photomap, photoinfo)
 			}
-			log.Println(photomap)
+			log.Printf("this is photomap %v", photomap)
 			est["photo"] = photomap[0]["photo"]
 			est_map = append(est_map, est)
 		}
