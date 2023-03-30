@@ -3,11 +3,11 @@ addr="http://192.168.0.91:8080"
 # addr="https://atsdo.xyz"
 
 echo "File upload test";
-curl ${addr}/upload -F estiemail=foo@gmail.com -F estiphoto=@/home/charliepi/Downloads/debian.jpg;
+curl ${addr}/upload -F estiemail=boo@gmail.com -F estiphoto=@/home/charliepi/Downloads/debian.jpg;
 echo "\tshould be '0'\n";
 
 echo "Get Photo by Email";
-curl ${addr}/getphotobyemail?entry=foo@gmail.com;
+curl ${addr}/getphotobyemail?entry=boo@gmail.com;
 echo "\tshould be a b64image";
 
 echo "\nLogin Test";
