@@ -19,8 +19,8 @@ func main() {
 	}))
 	e.GET("/test", TestHandler)
 
-	e.GET("/login", LoginHandler)
-	e.GET("/logout", LogoutHandler)
+	e.POST("/login", LoginHandler)
+	e.POST("/logout", LogoutHandler)
 
 	e.GET("/ins_rev", InsertReviewHandler)
 	e.GET("/all_revs", GetAllReviewsHandler)
