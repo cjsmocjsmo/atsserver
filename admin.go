@@ -141,11 +141,11 @@ func Create_Admin() {
 	}
 }
 
-// func parse_query_string(x string) (string, string, string) {
-// 	parts := strings.Split(x, "_")
-// 	rawname := strings.Split(parts[0], "=")
-// 	return rawname[1], parts[1], parts[2]
-// }
+func parse_query_string(x string) (string, string, string) {
+	parts := strings.Split(x, "_")
+	rawname := strings.Split(parts[0], "=")
+	return rawname[1], parts[1], parts[2]
+}
 
 func get_hash(x string) string {
 	h := sha256.New()
@@ -215,14 +215,14 @@ func comp_str(x string, y string) bool {
 func LoginHandler(c echo.Context) error {
 	rawstr := c.QueryString()
 	log.Println(rawstr)
-	t := c.FormValue("token")
-	e := c.FormValue("email")
-	p := c.FormValue("pwd")
-	log.Println(t)
-	log.Println(e)
-	log.Println(p)
+	// t := c.FormValue("token")
+	// e := c.FormValue("email")
+	// p := c.FormValue("pwd")
+	// log.Println(t)
+	// log.Println(e)
+	// log.Println(p)
 
-	// t, e, p := parse_query_string(rawstr)
+	t, e, p := parse_query_string(rawstr)
 	thash := get_hash(t)
 	ehash := get_hash(e)
 	phash := get_hash(p)
