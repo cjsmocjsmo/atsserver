@@ -213,13 +213,15 @@ func comp_str(x string, y string) bool {
 }
 
 func LoginHandler(c echo.Context) error {
+	rawstr := c.QueryString()
+	log.Println(rawstr)
 	t := c.FormValue("token")
 	e := c.FormValue("email")
 	p := c.FormValue("pwd")
 	log.Println(t)
 	log.Println(e)
 	log.Println(p)
-	// rawstr := c.QueryString()
+
 	// t, e, p := parse_query_string(rawstr)
 	thash := get_hash(t)
 	ehash := get_hash(e)
