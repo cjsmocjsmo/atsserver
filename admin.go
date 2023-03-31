@@ -233,10 +233,10 @@ func LoginHandler(c echo.Context) error {
 	comp2 := comp_str(ehash, edb)
 	comp3 := comp_str(phash, admin_info_db["password"])
 
-	isLoggedIn := false
+	isLoggedIn := "1"
 	if comp1 && comp2 && comp3 {
 		insert_loggedin(e)
-		isLoggedIn = true
+		isLoggedIn = "0"
 	}
 
 	return c.JSON(http.StatusOK, isLoggedIn)

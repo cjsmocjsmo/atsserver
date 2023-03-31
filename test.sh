@@ -11,11 +11,11 @@ addr="http://192.168.0.91:8080"
 # echo "\tshould be a b64image";
 
 echo "\nLogin Test";
-curl ${addr}/login -F token=atsadmin2 -F email=porthose.cjsmo.cjsmo@gmail.com -F pwd=porthose;
+curl ${addr}/login?entry=atsadmin2_porthose.cjsmo.cjsmo@gmail.com_porthose;
 echo "\tshould be true\n";
 
 echo "Login Test Fail";
-curl ${addr}/login -F token=atsadmin -F email=porthose.cjsmo.cjsmo@gmail.com -F pwd=porthose;
+curl ${addr}/login?entry=atsadmin_porthose.cjsmo.cjsmo@gmail.com_porthose;
 echo "\tshould be false\n";
 
 # echo "Insert Rev Test";
