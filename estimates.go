@@ -217,8 +217,14 @@ func GetAllEstimatesHandler(c echo.Context) error {
 				photomap = append(photomap, photoinfo)
 			}
 			log.Printf("this is photomap %v", photomap)
-			est["photo"] = photomap[0]["photo"]
-			est_map = append(est_map, est)
+			if len(photomap) != 0 {
+				est["photo"] = photomap[0]["photo"]
+				est_map = append(est_map, est)
+			} else {
+				est["photo"] = "No Photo Found"
+				est_map = append(est_map, est)
+			}
+
 		}
 	}
 
