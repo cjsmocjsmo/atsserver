@@ -142,9 +142,9 @@ func Create_Admin() {
 }
 
 func parse_query_string(x string) (string, string, string) {
-	parts := strings.Split(x, "_")
-	rawname := strings.Split(parts[0], "=")
-	return rawname[1], parts[1], parts[2]
+	rawstr := strings.Split(x, "=")
+	parts := strings.Split(rawstr[1], "_")
+	return parts[0], parts[1], parts[2]
 }
 
 func get_hash(x string) string {
@@ -234,11 +234,13 @@ func LoginHandler(c echo.Context) error {
 	comp3 := comp_str(phash, admin_info_db["password"])
 
 	li := map[string]string{}
-	li["isLoggedIn"] = "false"
+
 	if comp1 && comp2 && comp3 {
 		insert_loggedin(e)
-		li["isLoggedIn"] = "false"
+		li["isLoggedIn"] = "true"
 
+	} else {
+		li["isLoggedIn"] = "false"
 	}
 
 	return c.JSON(http.StatusOK, li)
