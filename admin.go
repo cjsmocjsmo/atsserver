@@ -279,17 +279,19 @@ func LoginHandler(c echo.Context) error {
 	comp3 := comp_str(phash, admin_info_db["password"])
 	h := t + e
 	cookie := get_hash(h)
+	log.Printf("this is cookie\n %v", cookie)
 
 	li := map[string]string{}
 
 	if comp1 && comp2 && comp3 {
 		insert_loggedin(e, cookie)
 		li["isLoggedIn"] = "true"
+		li["cookie"] = cookie
 
 	} else {
 		li["isLoggedIn"] = "false"
 	}
-
+	log.Printf("this is li\n %v", li)
 	return c.JSON(http.StatusOK, li)
 }
 
