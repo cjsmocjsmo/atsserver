@@ -95,7 +95,7 @@ func Insert_Admins(x UserS) int {
 	return ret_val
 }
 
-func insert_loggedin(email string) int {
+func insert_loggedin(email string, cookie string) int {
 
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
@@ -118,7 +118,7 @@ func insert_loggedin(email string) int {
 	// nemail := strings.ReplaceAll(newemail, "DOT", ".")
 	// ndate := strings.ReplaceAll(x.Date, "_", "-")
 
-	res, err := db.Exec("INSERT INTO loggedin VALUES(?,?)", id, email)
+	res, err := db.Exec("INSERT INTO loggedin VALUES(?,?,?)", id, email, cookie)
 	if err != nil {
 		log.Println("admin insert has failed")
 	}
@@ -212,6 +212,51 @@ func comp_str(x string, y string) bool {
 	}
 }
 
+func CookieCheckHandler(c echo.Context) error {
+	x := c.QueryString()
+	parts := strings.Split(x, "=")
+	cookie := parts[1]
+	var db_file string
+	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+	if boo {
+		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+	} else {
+		db_file = "atsinfo.db"
+	}
+
+	db, err := sql.Open("sqlite3", db_file)
+
+	if err != nil {
+		log.Fatal((err))
+	}
+
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM loggedin WHERE cookie=?", cookie)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	// id INTERGER PRIMARY KEY, email TEXT, cookie TEXT
+	aadmin := map[string]string{}
+	for rows.Next() {
+
+		var id string
+		var email string
+		var cookie string
+		err = rows.Scan(&id, &email, &cookie)
+		if err != nil {
+			log.Println(err)
+		}
+
+		aadmin["id"] = id
+		aadmin["email"] = email
+		aadmin["cookie"] = cookie
+	}
+
+	return c.JSON(http.StatusOK, aadmin)
+}
+
 func LoginHandler(c echo.Context) error {
 	rawstr := c.QueryString()
 	log.Println(rawstr)
@@ -232,11 +277,13 @@ func LoginHandler(c echo.Context) error {
 	comp1 := comp_str(thash, admin_info_db["token"])
 	comp2 := comp_str(ehash, edb)
 	comp3 := comp_str(phash, admin_info_db["password"])
+	h := t + e
+	cookie := get_hash(h)
 
 	li := map[string]string{}
 
 	if comp1 && comp2 && comp3 {
-		insert_loggedin(e)
+		insert_loggedin(e, cookie)
 		li["isLoggedIn"] = "true"
 
 	} else {

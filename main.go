@@ -18,7 +18,8 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.GET("/test", TestHandler)
-
+	
+	e.GET("/cookie_check", CookieCheckHandler)
 	e.GET("/login", LoginHandler)
 	e.GET("/logout", LogoutHandler)
 
