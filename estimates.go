@@ -354,8 +354,8 @@ func EstimatesGzipHandler(c echo.Context) error {
 	//gzip file and move it to static http folder
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
-	// f, _ := os.Create("static/est_db.tag.gz") //test
+	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
+	f, _ := os.Create("static/est2_db.tag.gz") //test
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
