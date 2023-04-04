@@ -355,7 +355,7 @@ func EstimatesGzipHandler(c echo.Context) error {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
-	f, _ := os.Create("static/est2_db.tag.gz") //test
+	f, _ := os.Create("/usr/share/ats_server/static/est2_db.tag.gz") //test
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)

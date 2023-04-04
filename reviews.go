@@ -434,7 +434,7 @@ func ReviewsGzipHandler(c echo.Context) error {
 	//gzip file and move it to static http folder
 	// buppath := os.Getenv("ATS_PATH") + "/static/rev_db.tag.gz"
 	// f, _ := os.Create(buppath) //production
-	f, _ := os.Create("static/rev2_db.tag.gz") //test
+	f, _ := os.Create("/use/share/ats_server/static/rev2_db.tag.gz") //test
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
 	w.Write([]byte(jsonstr))
 	w.Close()
