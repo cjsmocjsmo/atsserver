@@ -18,8 +18,6 @@ echo "Login Test Fail";
 curl ${addr}/login?entry=atsadmin_porthose.cjsmo.cjsmo@gmail.com_porthose;
 echo "\tshould be false\n";
 
-
-
 echo "Insert Rev Test";
 curl ${addr}/ins_rev?entry=booSPLITboo@gmail.comSPLITgoodSPACEjogSPLIT5;
 echo "\tshould be ["0", "0"]\n";
@@ -32,7 +30,6 @@ echo "All Jailed Test";
 curl ${addr}/all_jailed;
 echo "\tshould be a populted array\n";
 
-
 echo "Insert Est Test";
 curl ${addr}/ins_est?entry=booSPACEfuckSPLIT789SPACEhullSPACEaveSPLITportSPACEorchardSPLIT456-456-4566SPLITbooATgmailDOTcomSPLIT07-09-2023SPLITgoodSPACEjob;
 echo "\tshould be ["0", "0"]\n";
@@ -40,8 +37,6 @@ echo "\tshould be ["0", "0"]\n";
 echo "All_Est Test";
 curl ${addr}/all_est;
 echo "\tshould be a populated array\n";
-
-
 
 echo "Revs Backup Test";
 curl ${addr}/revbup;

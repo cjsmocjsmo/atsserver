@@ -18,7 +18,7 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.GET("/test", TestHandler)
-	
+
 	e.GET("/cookie_check", CookieCheckHandler)
 	e.GET("/login", LoginHandler)
 	e.GET("/logout", LogoutHandler)
@@ -41,9 +41,9 @@ func main() {
 
 	e.GET("/counts", CountzHandler)
 
-	e.File("/dbbackup", "static/dbbackup.tar.gz") // testing
-	e.File("/revbackup", "static/rev_db.tar.gz")
-	e.File("/estbackup", "static/est_db.tar.gz")
+	e.File("/dbbackup", "/usr/share/ats_server/static/dbbackup.tar.gz") // testing
+	e.File("/revbackup", "/usr/share/ats_server/static/rev_db.tar.gz")
+	e.File("/estbackup", "/usr/share/ats_server/static/est_db.tar.gz")
 
 	e.Static("/static", "static") // production for backup.tar.gz
 	// e.Logger.Fatal(e.Start(":8080")) //testing
