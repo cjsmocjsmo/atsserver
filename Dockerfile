@@ -32,7 +32,9 @@ RUN \
 
 RUN touch /usr/share/ats_server/ATS.log
 
-RUN mkdir /usr/share/ats_server/static
+RUN \
+    mkdir /usr/share/ats_server/static && \
+    chmod -R +rwx /usr/share/ats_server/static
 
 RUN \
     mkdir /usr/share/ats_server/users && \
@@ -53,6 +55,11 @@ WORKDIR /use/share/ats_server/static
 COPY static/dbbackup.tar.gz .
 COPY static/est_db.tar.gz .
 COPY static/rev_db.tar.gz .
+
+RUN \
+    chmod -R +rwx /use/share/ats_server/static/dbbackup.tar.gz && \
+    chmod -R +rwx /use/share/ats_server/static/est_db.tar.gz && \
+    chmod -R +rwx /use/share/ats_server/static/rev_db.tar.gz
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
