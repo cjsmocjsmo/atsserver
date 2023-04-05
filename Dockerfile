@@ -50,18 +50,18 @@ COPY user1.yaml .
 
 COPY user2.yaml .
 
-WORKDIR /use/share/ats_server/static
+# WORKDIR /use/share/ats_server/static
 
-COPY dbbackup.tar.gz .
-COPY est_db.tar.gz .
-COPY rev_db.tar.gz .
+# COPY dbbackup.tar.gz .
+# COPY est_db.tar.gz .
+# COPY rev_db.tar.gz .
 
-WORKDIR /use/share/ats_server
+# WORKDIR /use/share/ats_server
 
-RUN \
-    chmod -R +rwx /use/share/ats_server/static/dbbackup.tar.gz && \
-    chmod -R +rwx /use/share/ats_server/static/est_db.tar.gz && \
-    chmod -R +rwx /use/share/ats_server/static/rev_db.tar.gz
+# RUN \
+#     chmod -R +rwx /use/share/ats_server/static/dbbackup.tar.gz && \
+#     chmod -R +rwx /use/share/ats_server/static/est_db.tar.gz && \
+#     chmod -R +rwx /use/share/ats_server/static/rev_db.tar.gz
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log

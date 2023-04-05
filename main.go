@@ -33,8 +33,8 @@ func main() {
 	e.GET("/all_est", GetAllEstimatesHandler)
 	e.GET("/comp_est", CompletEstimateHandler)
 
-	e.GET("/revbup", ReviewsGzipHandler)
-	e.GET("/estbup", EstimatesGzipHandler)
+	// e.GET("/revbup", ReviewsGzipHandler)
+	// e.GET("/estbup", EstimatesGzipHandler)
 
 	e.POST("/upload", UploadHandler)
 	e.GET("/getphotobyemail", GetPhotoByEmailHandler)
@@ -42,10 +42,10 @@ func main() {
 	e.GET("/counts", CountzHandler)
 
 	e.File("/dbbackup", "/usr/share/ats_server/atsinfo.db") // testing
-	e.File("/revbackup", "/usr/share/ats_server/rev_db.tar.gz")
-	e.File("/estbackup", "/usr/share/ats_server/est_db.tar.gz")
+	// e.File("/revbackup", "/usr/share/ats_server/rev_db.tar.gz")
+	// e.File("/estbackup", "/usr/share/ats_server/est_db.tar.gz")
 
-	e.Static("/static", "static") // production for backup.tar.gz
+	// e.Static("/static", "static") // production for backup.tar.gz
 	// e.Logger.Fatal(e.Start(":8080")) //testing
 	e.Logger.Fatal(e.Start(":8080")) //production
 }

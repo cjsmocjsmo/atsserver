@@ -1,9 +1,9 @@
 package main
 
 import (
-	"compress/gzip"
+	// "compress/gzip"
 	"database/sql"
-	"encoding/json"
+	// "encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -287,92 +287,92 @@ func CompletEstimateHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func EstimatesGzipHandler(c echo.Context) error {
-	log.Println("starting GetAllReviewsHandler")
-	var db_file string
-	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-	if boo {
-		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-	} else {
-		db_file = "atsinfo.db" //testing
-	}
+// func EstimatesGzipHandler(c echo.Context) error {
+// 	log.Println("starting GetAllReviewsHandler")
+// 	var db_file string
+// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+// 	if boo {
+// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+// 	} else {
+// 		db_file = "atsinfo.db" //testing
+// 	}
 
-	db, err := sql.Open("sqlite3", db_file) //production
+// 	db, err := sql.Open("sqlite3", db_file) //production
 
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	defer db.Close()
+// 	defer db.Close()
 
-	rows, err := db.Query("SELECT * FROM estimates")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
+// 	rows, err := db.Query("SELECT * FROM estimates")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer rows.Close()
 
-	estimates := []map[string]string{}
+// 	estimates := []map[string]string{}
 
-	for rows.Next() {
-		est := map[string]string{}
-		var id string
-		var name string
-		var address string
-		var city string
-		var telephone string
-		var email string
-		var reqservdate string
-		var date string
-		var time string
-		var comment string
+// 	for rows.Next() {
+// 		est := map[string]string{}
+// 		var id string
+// 		var name string
+// 		var address string
+// 		var city string
+// 		var telephone string
+// 		var email string
+// 		var reqservdate string
+// 		var date string
+// 		var time string
+// 		var comment string
 
-		err = rows.Scan(&id, &name, &address, &city, &telephone, &email, &reqservdate, &date, &time, &comment)
-		if err != nil {
-			log.Println(err)
-		}
+// 		err = rows.Scan(&id, &name, &address, &city, &telephone, &email, &reqservdate, &date, &time, &comment)
+// 		if err != nil {
+// 			log.Println(err)
+// 		}
 
-		est["id"] = id
-		est["name"] = name
-		est["address"] = address
-		est["city"] = city
-		est["telephone"] = telephone
-		est["email"] = email
-		est["reqservdate"] = reqservdate
-		est["date"] = date
-		est["time"] = time
-		est["comment"] = comment
-		estimates = append(estimates, est)
+// 		est["id"] = id
+// 		est["name"] = name
+// 		est["address"] = address
+// 		est["city"] = city
+// 		est["telephone"] = telephone
+// 		est["email"] = email
+// 		est["reqservdate"] = reqservdate
+// 		est["date"] = date
+// 		est["time"] = time
+// 		est["comment"] = comment
+// 		estimates = append(estimates, est)
 
-	}
+// 	}
 
-	//convert to json
-	jsonstr, err := json.Marshal(estimates)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("this is est jsonstr: %v", jsonstr)
-	//gzip file and move it to static http folder
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	path := os.Getenv("ATS_PATH") + "/est2_db.tar.gz"
-	// path := "/usr/share/ats_server/est2_db.tar.gz"
-	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
-	f, _ := os.Create(path) //test
+// 	//convert to json
+// 	jsonstr, err := json.Marshal(estimates)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	log.Printf("this is est jsonstr: %v", jsonstr)
+// 	//gzip file and move it to static http folder
+// 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 	path := os.Getenv("ATS_PATH") + "/est2_db.tar.gz"
+// 	// path := "/usr/share/ats_server/est2_db.tar.gz"
+// 	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
+// 	f, _ := os.Create(path) //test
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
-	w.Write([]byte(jsonstr))
-	w.Close()
+// 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
+// 	w.Write([]byte(jsonstr))
+// 	w.Close()
 
-	result := 3
-	if _, err := os.Stat(path); err == nil {
-		log.Printf("File exists\n")
-		result = 0
-	} else {
-		log.Printf("File does not exist\n")
-		result = 1
-	}
+// 	result := 3
+// 	if _, err := os.Stat(path); err == nil {
+// 		log.Printf("File exists\n")
+// 		result = 0
+// 	} else {
+// 		log.Printf("File does not exist\n")
+// 		result = 1
+// 	}
 
-	log.Printf("this is Estimates gzip status: %v ", result)
+// 	log.Printf("this is Estimates gzip status: %v ", result)
 
-	return c.JSON(http.StatusOK, result)
-}
+// 	return c.JSON(http.StatusOK, result)
+// }

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"compress/gzip"
+	// "compress/gzip"
 	"database/sql"
-	"encoding/json"
+	// "encoding/json"
 	"log"
 	"math/rand"
 	"net/http"
@@ -372,89 +372,89 @@ func GetJailedReviewsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, reviewz)
 }
 
-func ReviewsGzipHandler(c echo.Context) error {
-	log.Println("starting GetAllReviewsHandler")
-	var db_file string
-	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-	if boo {
-		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-	} else {
-		db_file = "atsinfo.db"
-	}
+// func ReviewsGzipHandler(c echo.Context) error {
+// 	log.Println("starting GetAllReviewsHandler")
+// 	var db_file string
+// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
+// 	if boo {
+// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
+// 	} else {
+// 		db_file = "atsinfo.db"
+// 	}
 
-	db, err := sql.Open("sqlite3", db_file) //production
+// 	db, err := sql.Open("sqlite3", db_file) //production
 
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	defer db.Close()
+// 	defer db.Close()
 
-	rows, err := db.Query("SELECT * FROM reviews")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
+// 	rows, err := db.Query("SELECT * FROM reviews")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer rows.Close()
 
-	reviews := []map[string]string{}
+// 	reviews := []map[string]string{}
 
-	for rows.Next() {
-		rev := map[string]string{}
-		var id string
+// 	for rows.Next() {
+// 		rev := map[string]string{}
+// 		var id string
 
-		var name string
-		var email string
-		var date string
-		var time string
-		var review string
-		var rating string
+// 		var name string
+// 		var email string
+// 		var date string
+// 		var time string
+// 		var review string
+// 		var rating string
 
-		err = rows.Scan(&id, &name, &email, &date, &time, &review, &rating)
-		if err != nil {
-			log.Println(err)
-		}
+// 		err = rows.Scan(&id, &name, &email, &date, &time, &review, &rating)
+// 		if err != nil {
+// 			log.Println(err)
+// 		}
 
-		rev["id"] = id
-		rev["name"] = name
-		rev["email"] = email
-		rev["date"] = date
-		rev["time"] = time
-		rev["review"] = review
-		rev["rating"] = rating
-		reviews = append(reviews, rev)
+// 		rev["id"] = id
+// 		rev["name"] = name
+// 		rev["email"] = email
+// 		rev["date"] = date
+// 		rev["time"] = time
+// 		rev["review"] = review
+// 		rev["rating"] = rating
+// 		reviews = append(reviews, rev)
 
-	}
+// 	}
 
-	//convert to json
-	jsonstr, err := json.Marshal(reviews)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("this is jsonstr: %v", jsonstr)
+// 	//convert to json
+// 	jsonstr, err := json.Marshal(reviews)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	log.Printf("this is jsonstr: %v", jsonstr)
 
-	//gzip file and move it to static http folder
-	path := os.Getenv("ATS_PATH") + "/rev2_db.tag.gz"
-	// f, _ := os.Create(buppath) //production
-	// path := "/use/share/ats_server/static/rev2_db.tar.gz"
-	f, _ := os.Create(path) //test
-	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
-	w.Write([]byte(jsonstr))
-	w.Close()
-	log.Println("rev_db.tar.gz has been created")
+// 	//gzip file and move it to static http folder
+// 	path := os.Getenv("ATS_PATH") + "/rev2_db.tag.gz"
+// 	// f, _ := os.Create(buppath) //production
+// 	// path := "/use/share/ats_server/static/rev2_db.tar.gz"
+// 	f, _ := os.Create(path) //test
+// 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
+// 	w.Write([]byte(jsonstr))
+// 	w.Close()
+// 	log.Println("rev_db.tar.gz has been created")
 
-	result := 3
-	if _, err := os.Stat(path); err == nil {
-		log.Printf("rev_db.tar.gz exists\n")
-		result = 0
-	} else {
-		log.Printf("rev_db.tar.gz does not exist\n")
-		result = 1
-	}
+// 	result := 3
+// 	if _, err := os.Stat(path); err == nil {
+// 		log.Printf("rev_db.tar.gz exists\n")
+// 		result = 0
+// 	} else {
+// 		log.Printf("rev_db.tar.gz does not exist\n")
+// 		result = 1
+// 	}
 
-	log.Printf("this is rev result: %v", result)
-	return c.JSON(http.StatusOK, result)
+// 	log.Printf("this is rev result: %v", result)
+// 	return c.JSON(http.StatusOK, result)
 
-}
+// }
 
 func AcceptReviewHandler(c echo.Context) error {
 	log.Println("Starting AcceptReviewHandler")
