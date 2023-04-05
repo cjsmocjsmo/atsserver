@@ -52,9 +52,11 @@ COPY user2.yaml .
 
 WORKDIR /use/share/ats_server/static
 
-COPY static/dbbackup.tar.gz .
-COPY static/est_db.tar.gz .
-COPY static/rev_db.tar.gz .
+COPY dbbackup.tar.gz .
+COPY est_db.tar.gz .
+COPY rev_db.tar.gz .
+
+WORKDIR /use/share/ats_server
 
 RUN \
     chmod -R +rwx /use/share/ats_server/static/dbbackup.tar.gz && \
