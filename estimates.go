@@ -251,7 +251,7 @@ func CompletEstimateHandler(c echo.Context) error {
 	}
 
 	defer db.Close()
-	_, err2 := db.Exec("DELETE FROM est_working WHERE id=?)", &to_be_del)
+	_, err2 := db.Exec("DELETE FROM est_working WHERE id=?", &to_be_del)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("est_working deletion has failed")
@@ -272,10 +272,10 @@ func CompletEstimateHandler(c echo.Context) error {
 	}
 
 	_, err = res2.LastInsertId()
-	
+
 	if err != nil {
 		log.Println(err)
-		
+
 	}
 
 	// result := []int{ret_val, ret_val2}
