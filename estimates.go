@@ -235,7 +235,7 @@ func GetAllEstimatesHandler(c echo.Context) error {
 
 func CompletEstimateHandler(c echo.Context) error {
 	log.Println("Complete estimate has started")
-	to_be_del := c.QueryParam("estvid")
+	to_be_del := c.QueryParam("estid")
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {
@@ -251,40 +251,38 @@ func CompletEstimateHandler(c echo.Context) error {
 	}
 
 	defer db.Close()
-	del1, err2 := db.Exec("DELETE FROM est_working WHERE id=?)", &to_be_del)
+	_, err2 := db.Exec("DELETE FROM est_working WHERE id=?)", &to_be_del)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("est_working deletion has failed")
 	}
-	var ret_val int
-	_, err = del1.LastInsertId()
-	if err != nil {
-		log.Println(err)
-		ret_val = 1
-	} else {
-		ret_val = 0
-	}
+	// var ret_val int
+	// _, err = del1.LastInsertId()
+	// if err != nil {
+	// 	log.Println(err)
+	// 	ret_val = 1
+	// } else {
+	// 	ret_val = 0
+	// }
 	//delete from working add to completed
-	res2, err2 := db.Exec("INSERT INTO est_completed VALUES(?,?)", to_be_del, to_be_del)
-	if err2 != nil {
-		log.Println(err2)
+	res2, err3 := db.Exec("INSERT INTO est_completed VALUES(?,?)", to_be_del, to_be_del)
+	if err3 != nil {
+		log.Println(err3)
 		log.Println("est_completed insert has failed")
 	}
 
-	var ret_val2 int
 	_, err = res2.LastInsertId()
+	
 	if err != nil {
 		log.Println(err)
-		ret_val = 1
-	} else {
-		ret_val = 0
+		
 	}
 
-	result := []int{ret_val, ret_val2}
+	// result := []int{ret_val, ret_val2}
 
 	log.Println("Complete estimate is finished")
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, "Complete estimate is finished")
 }
 
 // func EstimatesGzipHandler(c echo.Context) error {

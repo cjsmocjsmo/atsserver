@@ -10,48 +10,34 @@ echo "Get Photo by Email";
 curl ${addr}/getphotobyemail?entry=boo@gmail.com;
 echo "\tshould be a b64image";
 
-# echo "\nLogin Test";
-# curl ${addr}/login?entry=atsadmin2_porthose.cjsmo.cjsmo@gmail.com_porthose;
-# echo "\tshould be true\n";
+echo "\nLogin Test";
+curl ${addr}/login?entry=atsadmin2_porthose.cjsmo.cjsmo@gmail.com_porthose;
+echo "\tshould be true\n";
 
-# echo "Login Test Fail";
-# curl ${addr}/login?entry=atsadmin_porthose.cjsmo.cjsmo@gmail.com_porthose;
-# echo "\tshould be false\n";
+echo "Login Test Fail";
+curl ${addr}/login?entry=atsadmin_porthose.cjsmo.cjsmo@gmail.com_porthose;
+echo "\tshould be false\n";
 
-# echo "Insert Rev Test";
-# curl ${addr}/ins_rev?entry=booSPLITboo@gmail.comSPLITgoodSPACEjogSPLIT5;
-# echo "\tshould be ["0", "0"]\n";
+echo "Insert Rev Test";
+curl ${addr}/ins_rev?entry=booSPLITboo@gmail.comSPLITgoodSPACEjogSPLIT5;
+echo "\tshould be ["0", "0"]\n";
 
-# echo "All_Revs Test";
-# curl ${addr}/all_revs;
-# echo "\tshould be a populated array\n";
+echo "All_Revs Test";
+curl ${addr}/all_revs;
+echo "\tshould be a populated array\n";
 
-# echo "All Jailed Test";
-# curl ${addr}/all_jailed;
-# echo "\tshould be a populted array\n";
+echo "All Jailed Test";
+curl ${addr}/all_jailed;
+echo "\tshould be a populted array\n";
 
-# echo "Insert Est Test";
-# curl ${addr}/ins_est?entry=booSPACEfuckSPLIT789SPACEhullSPACEaveSPLITportSPACEorchardSPLIT456-456-4566SPLITbooATgmailDOTcomSPLIT07-09-2023SPLITgoodSPACEjob;
-# echo "\tshould be ["0", "0"]\n";
+echo "Insert Est Test";
+curl ${addr}/ins_est?entry=booSPACEfuckSPLIT789SPACEhullSPACEaveSPLITportSPACEorchardSPLIT456-456-4566SPLITbooATgmailDOTcomSPLIT07-09-2023SPLITgoodSPACEjob;
+echo "\tshould be ["0", "0"]\n";
 
-# echo "All_Est Test";
-# curl ${addr}/all_est;
-# echo "\tshould be a populated array\n";
+echo "All_Est Test";
+curl ${addr}/all_est;
+echo "\tshould be a populated array\n";
 
-
-
-echo "Est Backup Test";
-curl ${addr}/estbup;
-echo "\tshould be a "0"\n";
-
-echo "Revs Backup Test";
-curl ${addr}/revbup;
-echo "\tshould be a "0"\n";
-
-echo "Revs Download Test";
-curl ${addr}/revbackup --output /home/charliepi/Desktop/rev_db.tar.gz;
-echo "\tshould be downloading a file\n"
-
-echo "Est Download Test";
-curl ${addr}/estbackup --output /home/charliepi/Desktop/est_db.tar.gz;
+echo "DB Download Test";
+curl ${addr}/dbbackup --output /home/charliepi/Desktop/dbbackup;
 echo "\tshould be downloading a file\n"
