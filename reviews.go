@@ -434,13 +434,24 @@ func ReviewsGzipHandler(c echo.Context) error {
 	//gzip file and move it to static http folder
 	// buppath := os.Getenv("ATS_PATH") + "/static/rev_db.tag.gz"
 	// f, _ := os.Create(buppath) //production
-	f, _ := os.Create("/use/share/ats_server/static/rev_db.tag.gz") //test
+	path := "/use/share/ats_server/static/rev_db.tar.gz"
+	f, _ := os.Create(path) //test
 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
 	w.Write([]byte(jsonstr))
 	w.Close()
 	log.Println("rev_db.tag.gz has been created")
 
-	return c.JSON(http.StatusOK, "Backup Created")
+	result := 0
+	if _, err := os.Stat(path); err == nil {
+		log.Printf("File exists\n")
+		result = 0
+	} else {
+		log.Printf("File does not exist\n")
+		result = 1
+	}
+
+	log.Printf("this is rev result: %v", result)
+	return c.JSON(http.StatusOK, result)
 
 }
 

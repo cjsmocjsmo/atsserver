@@ -40,10 +40,10 @@ echo "\tshould be a populated array\n";
 
 echo "Revs Backup Test";
 curl ${addr}/revbup;
-echo "\tshould be a "Backup Created"\n";
+echo "\tshould be a "0"\n";
 
 echo "Est Backup Test";
 curl ${addr}/estbup;
-echo "\tshould be a "Backup Created"\n";
+echo "\tshould be a "0"\n";
 
 
