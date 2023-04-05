@@ -41,9 +41,9 @@ func main() {
 
 	e.GET("/counts", CountzHandler)
 
-	e.File("/dbbackup", "/usr/share/ats_server/static/dbbackup.tar.gz") // testing
-	e.File("/revbackup", "/usr/share/ats_server/static/rev_db.tar.gz")
-	e.File("/estbackup", "/usr/share/ats_server/static/est_db.tar.gz")
+	e.File("/dbbackup", "/usr/share/ats_server/atsinfo.db") // testing
+	e.File("/revbackup", "/usr/share/ats_server/rev_db.tar.gz")
+	e.File("/estbackup", "/usr/share/ats_server/est_db.tar.gz")
 
 	e.Static("/static", "static") // production for backup.tar.gz
 	// e.Logger.Fatal(e.Start(":8080")) //testing
