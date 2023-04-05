@@ -441,12 +441,12 @@ func ReviewsGzipHandler(c echo.Context) error {
 	w.Close()
 	log.Println("rev_db.tag.gz has been created")
 
-	result := 0
+	result := 3
 	if _, err := os.Stat(path); err == nil {
-		log.Printf("File exists\n")
+		log.Printf("rev_db.tar.gz exists\n")
 		result = 0
 	} else {
-		log.Printf("File does not exist\n")
+		log.Printf("rev_db.tar.gz does not exist\n")
 		result = 1
 	}
 

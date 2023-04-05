@@ -362,7 +362,7 @@ func EstimatesGzipHandler(c echo.Context) error {
 	w.Write([]byte(jsonstr))
 	w.Close()
 
-	result := 0
+	result := 3
 	if _, err := os.Stat(path); err == nil {
 		log.Printf("File exists\n")
 		result = 0
