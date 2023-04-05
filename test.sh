@@ -49,9 +49,9 @@ curl ${addr}/revbup;
 echo "\tshould be a "0"\n";
 
 echo "Revs Download Test";
-curl ${addr}/revbackup --output /home/charliepi/Desktop/;
+curl ${addr}/revbackup --output /home/charliepi/Desktop/rev_db.tar.gz;
 echo "\tshould be downloading a file\n"
 
 echo "Est Download Test";
-curl ${addr}/estbackup --output /home/charliepi/Desktop/;
+curl ${addr}/estbackup --output /home/charliepi/Desktop/est_db.tar.gz;
 echo "\tshould be downloading a file\n"
