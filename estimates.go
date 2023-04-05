@@ -350,10 +350,11 @@ func EstimatesGzipHandler(c echo.Context) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	log.Printf("this is est jsonstr: %v", jsonstr)
 	//gzip file and move it to static http folder
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	path := "/usr/share/ats_server/est2_db.tar.gz"
+	path := os.Getenv("ATS_PATH") + "/est2_db.tar.gz"
+	// path := "/usr/share/ats_server/est2_db.tar.gz"
 	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
 	f, _ := os.Create(path) //test
 
