@@ -38,12 +38,20 @@ echo "\tshould be a b64image";
 # curl ${addr}/all_est;
 # echo "\tshould be a populated array\n";
 
-echo "Revs Backup Test";
-curl ${addr}/revbup;
-echo "\tshould be a "0"\n";
+
 
 echo "Est Backup Test";
 curl ${addr}/estbup;
 echo "\tshould be a "0"\n";
 
+echo "Revs Backup Test";
+curl ${addr}/revbup;
+echo "\tshould be a "0"\n";
 
+echo "Revs Download Test";
+curl ${addr}/revbackup --output /home/charliepi/Desktop/;
+echo "\tshould be downloading a file\n"
+
+echo "Est Download Test";
+curl ${addr}/estbackup --output /home/charliepi/Desktop/;
+echo "\tshould be downloading a file\n"
