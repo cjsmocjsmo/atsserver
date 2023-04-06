@@ -477,23 +477,15 @@ func AcceptReviewHandler(c echo.Context) error {
 
 	to_add_id := c.QueryParam("revid")
 
-	del1, err2 := db.Exec("DELETE FROM revs_jailed VALUES(?)", &to_add_id)
+	_, err2 := db.Exec("DELETE FROM revs_jailed WHERE id=?", &to_add_id)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("revs_jailed deletion has failed")
 	}
-	var ret_val int
-	_, err = del1.LastInsertId()
-	if err != nil {
-		log.Println(err)
-		ret_val = 1
-	} else {
-		ret_val = 0
-	}
 
-	Ins1, err2 := db.Exec("INSERT INTO revs_accepted VALUES(?,?)", &nid, &to_add_id)
-	if err2 != nil {
-		log.Println(err2)
+	Ins1, err3 := db.Exec("INSERT INTO revs_accepted VALUES(?,?)", &nid, &to_add_id)
+	if err3 != nil {
+		log.Println(err3)
 		log.Println("rev_accepted insert has failed")
 	}
 	var ret_val2 int
@@ -505,11 +497,9 @@ func AcceptReviewHandler(c echo.Context) error {
 		ret_val2 = 0
 	}
 
-	result := []int{ret_val, ret_val2}
+	log.Printf("This is accept review return status:\n\t %v", ret_val2)
 
-	log.Printf("This is accept review return status:\n\t %v", result)
-
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, ret_val2)
 }
 
 func RejectReviewHandler(c echo.Context) error {
@@ -533,37 +523,27 @@ func RejectReviewHandler(c echo.Context) error {
 
 	to_add_id := c.QueryParam("revid")
 
-	del1, err2 := db.Exec("DELETE FROM revs_jailed WHERE id=?)", &to_add_id)
+	_, err2 := db.Exec("DELETE FROM revs_jailed WHERE id=?", &to_add_id)
 	if err2 != nil {
 		log.Println(err2)
 		log.Println("revs_jailed deletion has failed")
 	}
-	var ret_val int
-	_, err = del1.LastInsertId()
-	if err != nil {
-		log.Println(err)
-		ret_val = 1
-	} else {
-		ret_val = 0
-	}
 
-	Ins1, err2 := db.Exec("INSERT INTO revs_rejected VALUES(?,?)", &nid, &to_add_id)
-	if err2 != nil {
-		log.Println(err2)
+	Ins1, err3 := db.Exec("INSERT INTO revs_rejected VALUES(?,?)", &nid, &to_add_id)
+	if err3 != nil {
+		log.Println(err3)
 		log.Println("revs_rejected insert has failed")
 	}
 	var ret_val2 int
-	_, err = Ins1.LastInsertId()
-	if err != nil {
-		log.Println(err)
+	_, err4 := Ins1.LastInsertId()
+	if err4 != nil {
+		log.Println(err4)
 		ret_val2 = 1
 	} else {
 		ret_val2 = 0
 	}
 
-	result := []int{ret_val, ret_val2}
+	log.Printf("This is reject review return status:\n\t %v", ret_val2)
 
-	log.Printf("This is reject review return status:\n\t %v", result)
-
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, ret_val2)
 }
