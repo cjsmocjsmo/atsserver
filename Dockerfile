@@ -22,23 +22,17 @@ FROM debian:bookworm-slim
 RUN \
     apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get -y install sqlite3 && \
+    apt-get --no-install-recommends install sqlite3 && \
     apt-get -y autoclean && \
-    apt-get -y autoremove
-
-RUN \
+    apt-get -y autoremove && \
     mkdir /usr/share/ats_server && \
-    chmod -R +rwx /usr/share/ats_server
-
-RUN touch /usr/share/ats_server/ATS.log
-
-RUN \
+    chmod -R +rwx /usr/share/ats_server && \
+    touch /usr/share/ats_server/ATS.log && \
     mkdir /usr/share/ats_server/static && \
-    chmod -R +rwx /usr/share/ats_server/static
-
-RUN \
+    chmod -R +rwx /usr/share/ats_server/static && \
     mkdir /usr/share/ats_server/users && \
-    chmod -R +rwx /usr/share/ats_server/users
+    chmod -R +rwx /usr/share/ats_server/users && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/share/ats_server
 
@@ -47,21 +41,7 @@ COPY --from=builder /go/src/atserver/main .
 WORKDIR /usr/share/ats_server/users
 
 COPY user1.yaml .
-
 COPY user2.yaml .
-
-# WORKDIR /use/share/ats_server/static
-
-# COPY dbbackup.tar.gz .
-# COPY est_db.tar.gz .
-# COPY rev_db.tar.gz .
-
-# WORKDIR /use/share/ats_server
-
-# RUN \
-#     chmod -R +rwx /use/share/ats_server/static/dbbackup.tar.gz && \
-#     chmod -R +rwx /use/share/ats_server/static/est_db.tar.gz && \
-#     chmod -R +rwx /use/share/ats_server/static/rev_db.tar.gz
 
 ENV ATS_PATH=/usr/share/ats_server
 ENV ATS_LOG_PATH=/usr/share/ats_server/ATS.log
