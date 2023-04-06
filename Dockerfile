@@ -22,7 +22,7 @@ FROM debian:bookworm-slim
 RUN \
     apt-get update && \
     apt-get -y dist-upgrade && \
-    apt-get install sqlite3 --no-install-recommends && \
+    apt-get install sqlite3 && \
     apt-get -y autoclean && \
     apt-get -y autoremove && \
     mkdir /usr/share/ats_server && \
