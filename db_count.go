@@ -14,49 +14,38 @@ import (
 )
 
 type CountsS struct {
-	vids          string
-	photos        string
-	admin         string
-	estimates     string
-	esticompleted string
-	estiworking   string
-	revs          string
-	revsaccepted  string
-	revsjailed    string
-	revsrejected  string
+	Vids          string
+	Photos        string
+	Admin         string
+	Estimates     string
+	Esticompleted string
+	Estiworking   string
+	Revs          string
+	Revsaccepted  string
+	Revsjailed    string
+	Revsrejected  string
 }
 
 func CountzHandler(c echo.Context) error {
-	// vc := video_count()
-	// pc := photos_count()
-	// ac := admin_count()
-	// ec := estimates_count()
-	// ecompc := est_completed_count()
-	// eworkc := est_working_count()
-	// rc := reviews_count()
-	// racceptc := revs_accepted_count()
-	// rjailedc := revs_jailed_count()
-	// rrejectc := revs_rejected_count()
-
-	result := []CountsS{}
+	// result := []CountsS{}
 
 	r := CountsS{}
-	r.vids = video_count()
-	r.photos = photos_count()
-	r.admin = admin_count()
-	r.estimates = estimates_count()
-	r.esticompleted = est_completed_count()
-	r.estiworking = est_working_count()
-	r.revs = reviews_count()
-	r.revsaccepted = revs_accepted_count()
-	r.revsjailed = revs_jailed_count()
-	r.revsrejected = revs_rejected_count()
+	r.Vids = video_count()
+	r.Photos = photos_count()
+	r.Admin = admin_count()
+	r.Estimates = estimates_count()
+	r.Esticompleted = est_completed_count()
+	r.Estiworking = est_working_count()
+	r.Revs = reviews_count()
+	r.Revsaccepted = revs_accepted_count()
+	r.Revsjailed = revs_jailed_count()
+	r.Revsrejected = revs_rejected_count()
 
-	result = append(result, r)
+	// result = append(result, r)
 
 	fmt.Println(r)
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, r)
 }
 
 func video_count() string {
@@ -70,7 +59,6 @@ func video_count() string {
 
 	db, err := sql.Open("sqlite3", db_file) // production
 	if err != nil {
-		fmt.Println(err)
 		log.Fatal(err)
 	}
 
@@ -80,7 +68,6 @@ func video_count() string {
 
 	query, err := db.Prepare("SELECT count(*) FROM videos")
 	if err != nil {
-		fmt.Println(err)
 		log.Fatal(err)
 	}
 	defer query.Close()
