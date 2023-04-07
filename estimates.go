@@ -233,7 +233,11 @@ func GetAllEstimatesHandler(c echo.Context) error {
 
 func CompletEstimateHandler(c echo.Context) error {
 	log.Println("Complete estimate has started")
-	to_be_del := c.QueryParam("estid")
+	// to_be_del := c.QueryParam("estid")
+	rawstr := c.QueryString()
+	parts := strings.Split(rawstr, "=")
+	to_be_del := parts[1]
+
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
 	if boo {

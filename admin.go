@@ -319,7 +319,11 @@ func LogoutHandler(c echo.Context) error {
 
 	defer db.Close()
 
-	rm_id := c.QueryParam("email")
+	// rm_id := c.QueryParam("email")
+	rawstr := c.QueryString()
+	parts := strings.Split(rawstr, "=")
+	rm_id := parts[1]
+
 	ret_val := 0
 
 	_, err2 := db.Exec("DELETE FROM loggedin WHERE email=?)", &rm_id)

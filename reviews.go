@@ -476,7 +476,10 @@ func AcceptReviewHandler(c echo.Context) error {
 	defer db.Close()
 	nid := UUID()
 
-	to_add_id := c.QueryParam("revid")
+	// to_add_id := c.QueryParam("revid")
+	rawstr := c.QueryString()
+	parts := strings.Split(rawstr, "=")
+	to_add_id := parts[1]
 
 	log.Printf("this is query param accpeted %v", to_add_id)
 
@@ -526,7 +529,11 @@ func RejectReviewHandler(c echo.Context) error {
 	defer db.Close()
 	nid := UUID()
 
-	to_add_id := c.QueryParam("revid")
+	// to_add_id := c.QueryParam("revid")
+	rawstr := c.QueryString()
+	parts := strings.Split(rawstr, "=")
+	to_add_id := parts[1]
+
 	log.Printf("tis is queryparams %v", to_add_id)
 
 	ret_val := 3
