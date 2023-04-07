@@ -83,7 +83,8 @@ func Insert_Admins(x UserS) int {
 	if err != nil {
 		log.Println("admin insert has failed")
 	}
-	var ret_val int
+
+	ret_val := 3
 	_, err = res.LastInsertId()
 	if err != nil {
 		log.Printf("this is last insert id err %v", err)
@@ -122,7 +123,8 @@ func insert_loggedin(email string, cookie string) int {
 	if err != nil {
 		log.Println("admin insert has failed")
 	}
-	var ret_val int
+
+	ret_val := 3
 	_, err = res.LastInsertId()
 	if err != nil {
 		log.Printf("this is last insert id err %v", err)

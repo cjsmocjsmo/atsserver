@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -28,7 +27,7 @@ func InsertEstimateHandler(c echo.Context) error {
 	db, err := sql.Open("sqlite3", db_file) //production
 
 	if err != nil {
-		log.Fatal((err))
+		log.Fatal(err)
 	}
 
 	defer db.Close()
@@ -39,7 +38,7 @@ func InsertEstimateHandler(c echo.Context) error {
 	// PortSPACEOrchardSPLIT
 	// 903-465-7811SPLITfooATgmailDOTcomSPLIT03-15-2023SPLIT0800SPLITASPACEtreeSPACEfellSPACEneedsSPACEcleanSPACEupSPLIT
 	rawstr := c.QueryString()
-	log.Printf("this is querystring:\n\t %v\n", rawstr)
+	log.Printf("this is est querystring:\n\t %v\n", rawstr)
 
 	parts := strings.Split(rawstr, "SPLIT")
 	log.Println(parts)
@@ -71,11 +70,11 @@ func InsertEstimateHandler(c echo.Context) error {
 
 	res, err := db.Exec("INSERT INTO estimates VALUES(?,?,?,?,?,?,?,?,?,?)", nid, nname, naddress, ncity, ntelephone, nemail, reqservdate, ndate, ntime, ncomment)
 	if err != nil {
-		log.Println(err)
+		log.Printf("this is err %v", err)
 		log.Println("estimates insert has failed")
 	}
 
-	var ret_val int
+	ret_val := 3
 	_, err = res.LastInsertId()
 	if err != nil {
 		log.Println(err)
@@ -90,7 +89,6 @@ func InsertEstimateHandler(c echo.Context) error {
 		log.Println("review insert has failed")
 	}
 
-	var ret_val2 int
 	_, err = res2.LastInsertId()
 	if err != nil {
 		log.Println(err)
@@ -99,10 +97,10 @@ func InsertEstimateHandler(c echo.Context) error {
 		ret_val = 0
 	}
 
-	r1 := []string{strconv.Itoa(ret_val), strconv.Itoa(ret_val2)}
-	log.Printf("this is insert estimates:\n\t %v", r1)
+	// r1 := []string{strconv.Itoa(ret_val), strconv.Itoa(ret_val2)}
+	log.Printf("this is insert estimates:\n\t %v", ret_val)
 
-	return c.JSON(http.StatusOK, r1)
+	return c.JSON(http.StatusOK, ret_val)
 }
 
 func GetAllEstimatesHandler(c echo.Context) error {
@@ -271,18 +269,20 @@ func CompletEstimateHandler(c echo.Context) error {
 		log.Println("est_completed insert has failed")
 	}
 
+	ret_val := 3
 	_, err = res2.LastInsertId()
-
 	if err != nil {
 		log.Println(err)
-
+		ret_val = 1
+	} else {
+		ret_val = 0
 	}
 
 	// result := []int{ret_val, ret_val2}
 
 	log.Println("Complete estimate is finished")
 
-	return c.JSON(http.StatusOK, "Complete estimate is finished")
+	return c.JSON(http.StatusOK, ret_val)
 }
 
 // func EstimatesGzipHandler(c echo.Context) error {
