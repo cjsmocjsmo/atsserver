@@ -33,11 +33,8 @@ func UploadHandler(c echo.Context) error {
 		log.Println(err)
 	}
 
-	log.Println(email)
-	log.Println(file.Filename)
 	var ret_val int
 	ext := filepath.Ext(file.Filename)
-	log.Println(ext)
 	extlist := []string{".jpeg", ".jpg", ".png", ".webp", ".avif"}
 	if contains(extlist, ext) {
 
@@ -51,7 +48,6 @@ func UploadHandler(c echo.Context) error {
 		content, _ := io.ReadAll(reader)
 		encoded := base64.StdEncoding.EncodeToString(content)
 		newimagestring := "data:image/jpeg;base64," + encoded
-		log.Println(newimagestring)
 		log.Println("Starting image insert")
 		var db_file string
 		_, boo := os.LookupEnv("ATS_DOCKER_VAR")
@@ -122,8 +118,6 @@ func UploadHandler(c echo.Context) error {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println(dst)
-		log.Println(dst)
 
 		res, err := db.Exec("INSERT INTO photos VALUES(?,?,?,?)", &nid, &email, &ndate, &dst)
 		if err != nil {

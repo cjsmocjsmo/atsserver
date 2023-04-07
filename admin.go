@@ -256,7 +256,6 @@ func CookieCheckHandler(c echo.Context) error {
 
 func LoginHandler(c echo.Context) error {
 	rawstr := c.QueryString()
-	log.Println(rawstr)
 
 	t, e, p := parse_query_string(rawstr)
 	thash := get_hash(t)

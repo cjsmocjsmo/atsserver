@@ -41,7 +41,6 @@ func InsertEstimateHandler(c echo.Context) error {
 	log.Printf("this is est querystring:\n\t %v\n", rawstr)
 
 	parts := strings.Split(rawstr, "SPLIT")
-	log.Println(parts)
 
 	rawname := strings.Split(parts[0], "=")
 	nname := strings.ReplaceAll(rawname[1], "SPACE", " ")
