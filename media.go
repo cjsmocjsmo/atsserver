@@ -8,7 +8,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"io"
 	"log"
-	//"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -47,18 +46,6 @@ func UploadHandler(c echo.Context) error {
 			log.Println(err)
 		}
 		defer src.Close()
-
-		// dst, err := os.Create(file.Filename) // may need temp folder
-		// if err != nil {
-		// 	log.Println(err)
-		// }
-		// defer dst.Close()
-
-		// // Copy
-		// if _, err = io.Copy(dst, src); err != nil {
-		// 	log.Println(err)
-		// }
-		// f, _ := os.Open(dst)
 
 		reader := bufio.NewReader(src)
 		content, _ := io.ReadAll(reader)
@@ -100,10 +87,8 @@ func UploadHandler(c echo.Context) error {
 			ret_val = 0
 		}
 		return c.JSON(http.StatusOK, ret_val)
-		//tranform to base64 and put in db in new table
 
 	} else {
-		//this is probably a video file
 		src, err := file.Open()
 		if err != nil {
 			log.Println(err)
@@ -121,7 +106,7 @@ func UploadHandler(c echo.Context) error {
 			log.Println(err)
 		}
 		rawdate := time.Now()
-		ndate := rawdate.Format("01-13-2022")
+		ndate := rawdate.Format("2022-01-13")
 
 		nid := UUID()
 
@@ -196,7 +181,6 @@ func GetPhotoByEmailHandler(c echo.Context) error {
 		var email string
 		var date string
 		var photo string
-		// id INTEGER PRIMARY KEY, email TEXT, date TEXT, photo TEXT
 		err = rows.Scan(&id, &email, &date, &photo)
 		if err != nil {
 			log.Println(err)

@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"gopkg.in/yaml.v3"
@@ -115,9 +114,6 @@ func insert_loggedin(email string, cookie string) int {
 	defer db.Close()
 
 	id := UUID()
-	// newemail := strings.Replace(x.Email, "AT", "@", 1)
-	// nemail := strings.ReplaceAll(newemail, "DOT", ".")
-	// ndate := strings.ReplaceAll(x.Date, "_", "-")
 
 	res, err := db.Exec("INSERT INTO loggedin VALUES(?,?,?)", id, email, cookie)
 	if err != nil {
@@ -239,7 +235,6 @@ func CookieCheckHandler(c echo.Context) error {
 		log.Fatal(err)
 	}
 	defer rows.Close()
-	// id INTERGER PRIMARY KEY, email TEXT, cookie TEXT
 	aadmin := map[string]string{}
 	for rows.Next() {
 
@@ -262,12 +257,6 @@ func CookieCheckHandler(c echo.Context) error {
 func LoginHandler(c echo.Context) error {
 	rawstr := c.QueryString()
 	log.Println(rawstr)
-	// t := c.FormValue("token")
-	// e := c.FormValue("email")
-	// p := c.FormValue("pwd")
-	// log.Println(t)
-	// log.Println(e)
-	// log.Println(p)
 
 	t, e, p := parse_query_string(rawstr)
 	thash := get_hash(t)
@@ -298,10 +287,6 @@ func LoginHandler(c echo.Context) error {
 }
 
 func LogoutHandler(c echo.Context) error {
-	// rawstr := c.QueryString()
-	// parts := strings.Split(rawstr, "=")
-	// email := parts[1]
-
 	log.Println("Starting LogoutHandler")
 	var db_file string
 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
@@ -319,7 +304,6 @@ func LogoutHandler(c echo.Context) error {
 
 	defer db.Close()
 
-	// rm_id := c.QueryParam("email")
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "=")
 	rm_id := parts[1]

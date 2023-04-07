@@ -58,7 +58,7 @@ func InsertEstimateHandler(c echo.Context) error {
 	reqservdate := parts[5]
 
 	rawdate := time.Now()
-	ndate := rawdate.Format("13-01-2022")
+	ndate := rawdate.Format("2022-01-13")
 	ntime := rawdate.Format("15:15:05")
 
 	// ndate := parts[4]
@@ -233,7 +233,6 @@ func GetAllEstimatesHandler(c echo.Context) error {
 
 func CompletEstimateHandler(c echo.Context) error {
 	log.Println("Complete estimate has started")
-	// to_be_del := c.QueryParam("estid")
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "=")
 	to_be_del := parts[1]
@@ -258,14 +257,7 @@ func CompletEstimateHandler(c echo.Context) error {
 		log.Println(err2)
 		log.Println("est_working deletion has failed")
 	}
-	// var ret_val int
-	// _, err = del1.LastInsertId()
-	// if err != nil {
-	// 	log.Println(err)
-	// 	ret_val = 1
-	// } else {
-	// 	ret_val = 0
-	// }
+
 	//delete from working add to completed
 	res2, err3 := db.Exec("INSERT INTO est_completed VALUES(?,?)", to_be_del, to_be_del)
 	if err3 != nil {
@@ -282,99 +274,7 @@ func CompletEstimateHandler(c echo.Context) error {
 		ret_val = 0
 	}
 
-	// result := []int{ret_val, ret_val2}
-
 	log.Println("Complete estimate is finished")
 
 	return c.JSON(http.StatusOK, ret_val)
 }
-
-// func EstimatesGzipHandler(c echo.Context) error {
-// 	log.Println("starting GetAllReviewsHandler")
-// 	var db_file string
-// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-// 	if boo {
-// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-// 	} else {
-// 		db_file = "atsinfo.db" //testing
-// 	}
-
-// 	db, err := sql.Open("sqlite3", db_file) //production
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	defer db.Close()
-
-// 	rows, err := db.Query("SELECT * FROM estimates")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer rows.Close()
-
-// 	estimates := []map[string]string{}
-
-// 	for rows.Next() {
-// 		est := map[string]string{}
-// 		var id string
-// 		var name string
-// 		var address string
-// 		var city string
-// 		var telephone string
-// 		var email string
-// 		var reqservdate string
-// 		var date string
-// 		var time string
-// 		var comment string
-
-// 		err = rows.Scan(&id, &name, &address, &city, &telephone, &email, &reqservdate, &date, &time, &comment)
-// 		if err != nil {
-// 			log.Println(err)
-// 		}
-
-// 		est["id"] = id
-// 		est["name"] = name
-// 		est["address"] = address
-// 		est["city"] = city
-// 		est["telephone"] = telephone
-// 		est["email"] = email
-// 		est["reqservdate"] = reqservdate
-// 		est["date"] = date
-// 		est["time"] = time
-// 		est["comment"] = comment
-// 		estimates = append(estimates, est)
-
-// 	}
-
-// 	//convert to json
-// 	jsonstr, err := json.Marshal(estimates)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	log.Printf("this is est jsonstr: %v", jsonstr)
-// 	//gzip file and move it to static http folder
-// 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 	path := os.Getenv("ATS_PATH") + "/est2_db.tar.gz"
-// 	// path := "/usr/share/ats_server/est2_db.tar.gz"
-// 	// f, _ := os.Create("/usr/share/ats_server/static/dbbackup.tag.gz") //production
-// 	f, _ := os.Create(path) //test
-
-// 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
-// 	w.Write([]byte(jsonstr))
-// 	w.Close()
-
-// 	result := 3
-// 	if _, err := os.Stat(path); err == nil {
-// 		log.Printf("File exists\n")
-// 		result = 0
-// 	} else {
-// 		log.Printf("File does not exist\n")
-// 		result = 1
-// 	}
-
-// 	log.Printf("this is Estimates gzip status: %v ", result)
-
-// 	return c.JSON(http.StatusOK, result)
-// }

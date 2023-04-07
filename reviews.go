@@ -1,9 +1,9 @@
 package main
 
 import (
-	// "compress/gzip"
 	"database/sql"
-	// "encoding/json"
+	"github.com/labstack/echo/v4"
+	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"math/rand"
 	"net/http"
@@ -11,9 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/labstack/echo/v4"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func ATS_Logging() {
@@ -115,7 +112,7 @@ func InsertReviewHandler(c echo.Context) error {
 	nemail := strings.Replace(rawemail, "DOT", ".", 1)
 
 	rawdate := time.Now()
-	ndate := rawdate.Format("13-01-2022")
+	ndate := rawdate.Format("2022-01-13")
 	ntime := rawdate.Format("15:15:05")
 
 	nreview := strings.ReplaceAll(parts[2], "SPACE", " ") //replace SPACE
@@ -150,7 +147,6 @@ func InsertReviewHandler(c echo.Context) error {
 		ret_val = 0
 	}
 
-	// result := []string{strconv.Itoa(ret_val), strconv.Itoa(ret_val2)}
 	log.Printf("this is insert review exit status:\n\t %v", ret_val)
 
 	return c.JSON(http.StatusOK, ret_val)
@@ -373,90 +369,6 @@ func GetJailedReviewsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, reviewz)
 }
 
-// func ReviewsGzipHandler(c echo.Context) error {
-// 	log.Println("starting GetAllReviewsHandler")
-// 	var db_file string
-// 	_, boo := os.LookupEnv("ATS_DOCKER_VAR")
-// 	if boo {
-// 		db_file = os.Getenv("ATS_PATH") + "/atsinfo.db"
-// 	} else {
-// 		db_file = "atsinfo.db"
-// 	}
-
-// 	db, err := sql.Open("sqlite3", db_file) //production
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	defer db.Close()
-
-// 	rows, err := db.Query("SELECT * FROM reviews")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer rows.Close()
-
-// 	reviews := []map[string]string{}
-
-// 	for rows.Next() {
-// 		rev := map[string]string{}
-// 		var id string
-
-// 		var name string
-// 		var email string
-// 		var date string
-// 		var time string
-// 		var review string
-// 		var rating string
-
-// 		err = rows.Scan(&id, &name, &email, &date, &time, &review, &rating)
-// 		if err != nil {
-// 			log.Println(err)
-// 		}
-
-// 		rev["id"] = id
-// 		rev["name"] = name
-// 		rev["email"] = email
-// 		rev["date"] = date
-// 		rev["time"] = time
-// 		rev["review"] = review
-// 		rev["rating"] = rating
-// 		reviews = append(reviews, rev)
-
-// 	}
-
-// 	//convert to json
-// 	jsonstr, err := json.Marshal(reviews)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	log.Printf("this is jsonstr: %v", jsonstr)
-
-// 	//gzip file and move it to static http folder
-// 	path := os.Getenv("ATS_PATH") + "/rev2_db.tag.gz"
-// 	// f, _ := os.Create(buppath) //production
-// 	// path := "/use/share/ats_server/static/rev2_db.tar.gz"
-// 	f, _ := os.Create(path) //test
-// 	w, _ := gzip.NewWriterLevel(f, gzip.BestCompression)
-// 	w.Write([]byte(jsonstr))
-// 	w.Close()
-// 	log.Println("rev_db.tar.gz has been created")
-
-// 	result := 3
-// 	if _, err := os.Stat(path); err == nil {
-// 		log.Printf("rev_db.tar.gz exists\n")
-// 		result = 0
-// 	} else {
-// 		log.Printf("rev_db.tar.gz does not exist\n")
-// 		result = 1
-// 	}
-
-// 	log.Printf("this is rev result: %v", result)
-// 	return c.JSON(http.StatusOK, result)
-
-// }
-
 func AcceptReviewHandler(c echo.Context) error {
 	log.Println("Starting AcceptReviewHandler")
 	var db_file string
@@ -476,7 +388,6 @@ func AcceptReviewHandler(c echo.Context) error {
 	defer db.Close()
 	nid := UUID()
 
-	// to_add_id := c.QueryParam("revid")
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "=")
 	to_add_id := parts[1]
@@ -529,7 +440,6 @@ func RejectReviewHandler(c echo.Context) error {
 	defer db.Close()
 	nid := UUID()
 
-	// to_add_id := c.QueryParam("revid")
 	rawstr := c.QueryString()
 	parts := strings.Split(rawstr, "=")
 	to_add_id := parts[1]
