@@ -41,10 +41,6 @@ func CountzHandler(c echo.Context) error {
 	r.Revsjailed = revs_jailed_count()
 	r.Revsrejected = revs_rejected_count()
 
-	// result = append(result, r)
-
-	fmt.Println(r)
-
 	return c.JSON(http.StatusOK, r)
 }
 

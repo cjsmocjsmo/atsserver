@@ -41,3 +41,8 @@ echo "\tshould be a populated array\n";
 echo "DB Download Test";
 curl ${addr}/dbbackup --output /home/charliepi/Desktop/dbbackup;
 echo "\tshould be downloading a file\n"
+
+echo "DB Counts Test";
+curl ${addr}/counts;
+echo "\tshould be downloading a file\n"
+
