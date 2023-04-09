@@ -280,6 +280,7 @@ func LoginHandler(c echo.Context) error {
 
 	} else {
 		li["isLoggedIn"] = "false"
+		li["cookie"] = cookie
 	}
 	log.Printf("this is li\n %v", li)
 	return c.JSON(http.StatusOK, li)
