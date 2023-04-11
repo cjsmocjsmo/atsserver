@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="gcr.io/atsgo-340504/atsserver:0.0.7";
+VERSION="gcr.io/atsgo-340504/atsserver:0.0.8";
 
 git pull && \
 docker build -t $VERSION . && \

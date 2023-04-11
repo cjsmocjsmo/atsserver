@@ -1,6 +1,6 @@
 #!/bin/sh
-# addr="http://192.168.0.91:8080"
-addr="https://atsdo.xyz"
+addr="http://192.168.0.91:8080"
+# addr="https://atsdo.xyz"
 
 echo "File upload test";
 curl ${addr}/upload -F estiemail=boo@gmail.com -F estiphoto=@/home/charliepi/Downloads/debian.jpg;
