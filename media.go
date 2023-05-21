@@ -60,7 +60,7 @@ func UploadHandler(c echo.Context) error {
 		rawdate := time.Now()
 		ndate := rawdate.Format("01-13-2022")
 
-		db, err := sql.Open("sqlite3", db_file) //production
+		db, err := sql.Open("sqlite3", db_file)
 
 		if err != nil {
 			log.Fatal(err)
@@ -91,13 +91,12 @@ func UploadHandler(c echo.Context) error {
 		}
 		defer src.Close()
 
-		dst, err := os.Create(file.Filename) // may need temp folder
+		dst, err := os.Create(file.Filename)
 		if err != nil {
 			log.Println(err)
 		}
 		defer dst.Close()
 
-		// Copy
 		if _, err = io.Copy(dst, src); err != nil {
 			log.Println(err)
 		}
