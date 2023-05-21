@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="us-central1-docker.pkg.dev/atsgo-340504/ats/atsserver:0.0.9";
+VERSION="us-central1-docker.pkg.dev/atsgo-340504/ats-server/atsserver:0.0.10";
 
 git pull && \
 docker build -t $VERSION . && \
